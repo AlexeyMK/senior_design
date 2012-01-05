@@ -1,0 +1,10 @@
+Initial TODO:
+
+- Set up Cherry.py app that serves 'game' front-end
+- Set up Boto to deal with the mechanical turk API
+- Set up a mysqlite or mysql (or something fun and noSQL-y) database backend to save results and maintain state
+
+- Get Proof of Concept working: 
+  - Run a script --> creates a task in (for now, fake) environment 
+  - User comes to task --> plays game, makes decision, saved
+  - User got paid & database has state of 'user played game & results' saved
