@@ -3,36 +3,30 @@ The server that mechanical turkers are using
 """
 
 import cherrypy
+from jinja2 import Environment, FileSystemLoader
 import random
+
+
+env = Environment(loader=FileSystemLoader('templates'))
 
 
 class MarketplacePage:
     
   _cp_config = {'tools.sessions.on': True}
 
+  @cherrypy.expose
   def entry_point(self, turker_id=1):
     # save turker's id
     cherrypy.session['turker'] = turker_id
     
-    return '''
-      Welcome to our marketplace simulation, thank you for participating.
-      There are two roles: offerer and receiver.
-      You are: receiver.
-      TODO - way better explanation
+    return env.get_template('intro.html').render()
 
-      <a href="receive_offer">Continue</a>
-    ''' 
-  entry_point.exposed = True
-
+  @cherrypy.expose
   def receive_offer(self):
     amount = random.randint(0,10) * 10
     cherrypy.session['amount'] = amount
-    return '''
-      You are offered %d cents.  Do you accept?
-      TODO - use form here
-      <a href="accept">Accept</a><a href="reject">Reject</a>
-    ''' % amount
-  receive_offer.exposed = True
+    
+    return env.get_template('offer.html').render(amount=amount)
 
   def accept(self):
     return "Great, congrats, thanks for playing!"
@@ -52,5 +46,4 @@ if __name__ == '__main__':
     cherrypy.quickstart(MarketplacePage(), config=localconf)
 else:
     # This branch is for the test suite; you can ignore it.
-    cherrypy.tree.mount(MarkerplacePage(), config=localconf)
-
+    cherrypy.tree.mount(MarketplacePage(), config=localconf)
