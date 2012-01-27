@@ -1,6 +1,6 @@
 Initial TODO:
 
-- add Jinja2 to CherryPy
+x add Jinja2 to CherryPy
 - get hosting somewhere (pennapps for now)
 - test on mturk testing env, manually
 - pick backend (mysql's easy enough) and integrate with SQLAlchemy or SQLObject, etc
