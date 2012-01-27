@@ -1,8 +1,14 @@
 Initial TODO:
 
-- Set up Cherry.py app that serves 'game' front-end
+- add Jinja2 to CherryPy
+- get hosting somewhere (pennapps for now)
+- test on mturk testing env, manually
+- pick backend (mysql's easy enough) and integrate with SQLAlchemy or SQLObject, etc
+- test on mturk test env, saving data
+
+- boto scripts for putting up projects (re-use old code)
+
 - Set up Boto to deal with the mechanical turk API
-- Set up a mysqlite or mysql (or something fun and noSQL-y) database backend to save results and maintain state
 
 - Get Proof of Concept working: 
   - Run a script --> creates a task in (for now, fake) environment 
