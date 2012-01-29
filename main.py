@@ -1,5 +1,11 @@
 """
 The server that mechanical turkers are using
+TODO:
+- actual accept/reject
+- actual review
+- no messing with amount offered.
+- ensure it runs on GAE
+- run on mturk playground
 """
 
 import cherrypy
@@ -25,7 +31,7 @@ def record_transaction(session, rating=None):
                    end_time = datetime.datetime.now(),
                    experiment = session['experiment']
         )
-  trans.put()
+  trans.put() # save
   return trans
 
 def render_for_experiment(page, experiment, **other_args):
@@ -37,7 +43,7 @@ class MarketplacePage:
   _cp_config = {'tools.sessions.on': True}
 
   @cherrypy.expose
-  def entry_point(self, turker_id="1"):
+  def intro(self, turker_id="1"):
     cherrypy.session['turker'] = turker_id
 
   # TODO: pick available experiment, set in session
@@ -49,7 +55,7 @@ class MarketplacePage:
       return render_for_experiment('intro.html', experiment) 
 
   @cherrypy.expose
-  def receive_offer(self):
+  def offer(self):
     if not 'round' in cherrypy.session:
       cherrypy.session['round'] = 0
     cherrypy.session['round'] += 1 # next round
@@ -66,15 +72,16 @@ class MarketplacePage:
       return render_for_experiment('offer.html', experiment, amount=amount)
       
   @cherrypy.expose
-  def accept(self):
+  def review(self, accepted=True):
     #TODO - create MarketTransaction, write it, include link to 'next'
-    cherrypy.session['accepted'] = True
-    record_transaction(cherrypy.session, "5") 
-    return "Great, congrats, thanks for playing!"
+    cherrypy.session['accepted'] = accepted # TODO - get from form
+    return render_for_experiment('review.html', cherrypy.session['experiment'])
 
   @cherrypy.expose
-  def reject(self):
-    return "fair enough, thanks for playing!"
+  def finished_round(self, rating=None):
+    record_transaction(cherrypy.session, rating) 
+    # Redirect back to offer
+    return self.offer() 
 
 # app engine specific:
 # hack to make sessions work
@@ -89,18 +96,3 @@ cf = {"/":{'tools.sessions.on':  True,
             }}
 app = cherrypy.tree.mount(MarketplacePage(), config=cf)
 wsgiref.handlers.CGIHandler().run(app)
-
-
-""" not app engine
-import os.path
-localconf = os.path.join(os.path.dirname(__file__), 'local.conf')
-
-if __name__ == '__main__':
-    # CherryPy always starts with app.root when trying to map request URIs
-    # to objects, so we need to mount a request handler root. A request
-    # to '/' will be mapped to HelloWorld().index().
-    cherrypy.quickstart(MarketplacePage(), config=localconf)
-else:
-    # This branch is for the test suite; you can ignore it.
-    cherrypy.tree.mount(MarketplacePage(), config=localconf)
-"""
