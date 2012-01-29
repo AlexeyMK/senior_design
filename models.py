@@ -1,0 +1,25 @@
+import datetime
+from google.appengine.ext import db
+from google.appengine.api import users
+
+class Experiment(db.Model):
+  description = db.TextProperty()
+  conditions_json = db.TextProperty() # TODO
+  num_subjects_total = db.IntegerProperty(required=True)
+  num_rounds_per_subject = db.IntegerProperty(required=True)
+  active = db.BooleanProperty(required=True)
+
+class MarketTransaction(db.Model):
+  turker_id = db.StringProperty(required=True)
+  # partner = something like a config for one of the bots
+  # can be inferred from partner later
+  amount_offered_cents = db.IntegerProperty(required=True) 
+  accepted_offer = db.BooleanProperty(required=True)
+  rating_left = db.StringProperty() # left intentionally vague
+  experiment = db.ReferenceProperty(Experiment)
+  transaction_round = db.IntegerProperty(required=True)
+  start_time = db.DateTimeProperty(required=True)
+  end_time = db.DateTimeProperty(required=True)
+
+#TODO here - 'partner' - bot descriptions, per experiment...
+

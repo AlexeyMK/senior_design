@@ -5,8 +5,8 @@ Initial TODO:
 
 x add Jinja2 to CherryPy
 x get hosting somewhere (google app engine. NOTE - to setup, download GAE python stuff and symlink your cherrypy/jinja2 install locally)
+x pick backend (mysql's easy enough) and integrate with SQLAlchemy or SQLObject, etc # ended up picking Google App Engine's ORM)
 - test on mturk testing env, manually
-- pick backend (mysql's easy enough) and integrate with SQLAlchemy or SQLObject, etc
 - test on mturk test env, saving data
 
 - boto scripts for putting up projects (re-use old code)

@@ -5,43 +5,76 @@ The server that mechanical turkers are using
 import cherrypy
 from jinja2 import Environment, FileSystemLoader
 from google.appengine.api import memcache
-
+from models import *
 
 import wsgiref.handlers
 import random
 import sys
 
-
 # patch sys memcache module locations to use GAE memcache
 sys.modules['memcache'] = memcache
 env = Environment(loader=FileSystemLoader('templates'))
 
+def record_transaction(session, rating=None):
+  trans = MarketTransaction(turker_id = session['turker'],
+                   amount_offered_cents = session['amount'],
+                   accepted_offer = session['accepted'],
+                   rating_left = rating,
+                   transaction_round = session['round'],
+                   start_time = session['start_time'],
+                   end_time = datetime.datetime.now(),
+                   experiment = session['experiment']
+        )
+  trans.put()
+  return trans
+
+def render_for_experiment(page, experiment, **other_args):
+  #TODO - headers, and general chrome/css
+  other_args['conditions'] = experiment.conditions_json
+  return env.get_template(page).render(**other_args)
 
 class MarketplacePage:
-    
   _cp_config = {'tools.sessions.on': True}
 
   @cherrypy.expose
-  def entry_point(self, turker_id=1):
-    # save turker's id
+  def entry_point(self, turker_id="1"):
     cherrypy.session['turker'] = turker_id
-    
-    return env.get_template('intro.html').render()
+
+  # TODO: pick available experiment, set in session
+    experiment = Experiment.all().filter('active =', True).get()
+    if not experiment:
+      return "Can't find an experiment for you, sorry"
+    else:
+      cherrypy.session['experiment'] = experiment
+      return render_for_experiment('intro.html', experiment) 
 
   @cherrypy.expose
   def receive_offer(self):
-    amount = random.randint(0,10) * 10
-    cherrypy.session['amount'] = amount
-    
-    return env.get_template('offer.html').render(amount=amount)
+    if not 'round' in cherrypy.session:
+      cherrypy.session['round'] = 0
+    cherrypy.session['round'] += 1 # next round
 
+    experiment = cherrypy.session['experiment']
+
+    if cherrypy.session['round'] > experiment.num_rounds_per_subject:
+      return render_for_experiment('end.html', experiment)
+    else:
+      #TODO - ask experiment to configure this randomness 
+      amount = random.randint(0,10) * 10
+      cherrypy.session['amount'] = amount
+      cherrypy.session['start_time'] = datetime.datetime.now()
+      return render_for_experiment('offer.html', experiment, amount=amount)
+      
+  @cherrypy.expose
   def accept(self):
+    #TODO - create MarketTransaction, write it, include link to 'next'
+    cherrypy.session['accepted'] = True
+    record_transaction(cherrypy.session, "5") 
     return "Great, congrats, thanks for playing!"
-  accept.exposed = True
 
+  @cherrypy.expose
   def reject(self):
     return "fair enough, thanks for playing!"
-  reject.exposed = True
 
 # app engine specific:
 # hack to make sessions work
