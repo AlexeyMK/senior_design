@@ -1,13 +1,19 @@
 #!/usr/bin/python
 """Set of boto wrappers 
-# (1) generate the experiment: 
-# print create_hit()
-# (2) pay participants: 
-# pay_for_work(hit_list5)
-
    To set up boto, make sure to add a ~/.boto file with your MTurk details:
    (http://code.google.com/p/boto/wiki/BotoConfig)
 """
+print """Usage: 
+# (1) generate the experiment: 
+# print create_hit(experiment_name)
+# (2) pay participants: 
+# pay_for_work(hit_list5)
+
+In testmode, you can verify that your thing got pushed here:
+Requester: https://requestersandbox.mturk.com/mturk/manageHITs
+Turker: https://workersandbox.mturk.com/mturk/ and search for your task 
+"""
+
 #TODO: be more specific with imports
 from boto.mturk.connection import *
 from boto.mturk.question import *
@@ -25,6 +31,7 @@ EXTERNAL_Q_URL = "http://marketplacer.appspot.com"
 HIT_DESCRIPTION = "Play a series of simple games with a fellow turker and receive a bonus accordingly"
 HIT_TITLE = "Marketplacr experiment"
 HIT_KEYWORDS = ["experiment", "easy",]
+HIT_BASE_PRICE = 0.02
 
 HIT_CREATE_FAILED = -1
 
@@ -103,19 +110,23 @@ def create_hit(experiment_name):
   q_url = EXTERNAL_Q_URL
   desc = HIT_DESCRIPTION 
   title = HIT_TITLE 
+  base_price = HIT_BASE_PRICE
+  quals = Qualifications() # empty
 
   hit_id = post_html_question(title, desc, quals, 
     num_tasks=5, price=base_price, q_url=q_url, 
     keywords=HIT_KEYWORDS)
+  if hit_id == HIT_CREATE_FAILED:
+    raise BaseException("whoa, could not create that hit...")
 
-  if hit_id != HIT_CREATE_FAILED:
-    import pickle
-    try:
-      hits = pickle.load(open('hits.pickle', 'rb'))
-    except:
-      hits = {}
-    hits[experiment_name] = hit_id
-    pickle.dump(hits, open('hits.pickle', 'wb'))
+  import pickle
+  try:
+    hits = pickle.load(open('hits.pickle', 'rb'))
+  except:
+    hits = {}
+  hits[experiment_name] = hit_id
+  pickle.dump(hits, open('hits.pickle', 'wb'))
+  return hit_id
 
 def pay_for_work (h_list):
   if SAFETY_BREAK:
