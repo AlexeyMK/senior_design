@@ -1,7 +1,9 @@
 """
-- save name in experiment name
-- force accept or reject of offer (js validation)
+PUSH BLOCKING
+- slightly better descriptions of experiment
 EVENTUALLY:
+- way prettier (bootstrap?)
+- save name in experiment name
 - separate 'test showing' from 'real showing' (IE, good preview)
 - get experiment design down to:
   I'd like to run an experiment with the following configs --> OK
@@ -20,7 +22,7 @@ from models import *
 
 import wsgiref.handlers
 import random
-import sys
+import sys, os
 from urllib import urlencode
 
 # patch sys memcache module locations to use GAE memcache
@@ -118,7 +120,12 @@ cf = {"/":{'tools.sessions.on':  True,
            'tools.sessions.clean_thread': True,
            # ten minute session timeout, not sure if this works
            'tools.session.timeout': 10, 
-            }}
+           
+           # setup static files
+           'tools.staticdir.root': os.path.dirname(os.path.abspath(__file__))
+            },
+      "/js":{'tools.staticdir.dir': 'js',
+             'tools.staticdir.on': True},
+     }
 app = cherrypy.tree.mount(MarketplacePage(), config=cf)
 wsgiref.handlers.CGIHandler().run(app)
-
