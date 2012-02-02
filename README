@@ -1,19 +1,8 @@
 To run locally, use (once you have the Google App Engine SDK installed):
 > dev_appserver.py . 
 
-Initial TODO:
+To push to google app engine (marketplacr.appspot.com), use
+> appcfg.py update .
 
-x add Jinja2 to CherryPy
-x get hosting somewhere (google app engine. NOTE - to setup, download GAE python stuff and symlink your cherrypy/jinja2 install locally)
-x pick backend (mysql's easy enough) and integrate with SQLAlchemy or SQLObject, etc # ended up picking Google App Engine's ORM)
-- test on mturk testing env, manually
-- test on mturk test env, saving data
-
-- boto scripts for putting up projects (re-use old code)
-
-- Set up Boto to deal with the mechanical turk API
-
-- Get Proof of Concept working: 
-  - Run a script --> creates a task in (for now, fake) environment 
-  - User comes to task --> plays game, makes decision, saved
-  - User got paid & database has state of 'user played game & results' saved
+To create a new HIT, use
+> python -c "from mturk import create_hit; print create_hit('test')"
