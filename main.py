@@ -1,11 +1,10 @@
 """
 The server that mechanical turkers are using
 TODO:
-- actual accept/reject
-- actual review
-- no messing with amount offered.
 - ensure it runs on GAE
 - run on mturk playground
+EVENTUALLY:
+- smarter round update (IE, I know what page you should be on next, why aren't you there)
 """
 
 import cherrypy
@@ -38,6 +37,7 @@ def record_transaction(session, rating=None):
 def render_for_experiment(page, experiment, **other_args):
   #TODO - headers, and general chrome/css
   other_args['conditions'] = experiment.conditions_json
+  other_args['experiment'] = experiment
   other_args['round'] = cherrypy.session.get('round')
   return env.get_template(page).render(**other_args)
 
@@ -100,4 +100,3 @@ cf = {"/":{'tools.sessions.on':  True,
            'tools.session.timeout': 10, 
             }}
 app = cherrypy.tree.mount(MarketplacePage(), config=cf)
-wsgiref.handlers.CGIHandler().run(app)
