@@ -2,6 +2,7 @@
 The server that mechanical turkers are using
 TODO:
 - run on mturk playground
+- enable 'please run THIS experiment' via mturk (link experiment to HIT)
 EVENTUALLY:
 - smarter round update (IE, I know what page you should be on next, why aren't you there)
 """
