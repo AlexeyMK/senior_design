@@ -1,6 +1,9 @@
 <pre> 
 You are offered {{amount}} cents.  Do you accept?
-TODO - use form here
 </pre>
-<a href="review">Accept</a><a href="review">Reject</a>
+<form action="review" method="POST">
+<input type="radio" name="accept" value="true"> Accept </a>
+<input type="radio" name="accept" value="true"> Reject </a>
+<input type="submit" value="submit" />
+</form>
 

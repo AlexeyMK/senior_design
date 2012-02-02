@@ -9,6 +9,7 @@ TODO:
 """
 
 import cherrypy
+from cherrypy.lib.cptools import redirect
 from jinja2 import Environment, FileSystemLoader
 from google.appengine.api import memcache
 from models import *
@@ -37,10 +38,15 @@ def record_transaction(session, rating=None):
 def render_for_experiment(page, experiment, **other_args):
   #TODO - headers, and general chrome/css
   other_args['conditions'] = experiment.conditions_json
+  other_args['round'] = cherrypy.session.get('round')
   return env.get_template(page).render(**other_args)
 
 class MarketplacePage:
   _cp_config = {'tools.sessions.on': True}
+
+  @cherrypy.expose
+  def index(self):
+    return redirect('intro', internal=False)
 
   @cherrypy.expose
   def intro(self, turker_id="1"):
@@ -72,16 +78,15 @@ class MarketplacePage:
       return render_for_experiment('offer.html', experiment, amount=amount)
       
   @cherrypy.expose
-  def review(self, accepted=True):
-    #TODO - create MarketTransaction, write it, include link to 'next'
-    cherrypy.session['accepted'] = accepted # TODO - get from form
+  def review(self, accept):
+    cherrypy.session['accepted'] = (accept == 'true')
     return render_for_experiment('review.html', cherrypy.session['experiment'])
 
   @cherrypy.expose
   def finished_round(self, rating=None):
     record_transaction(cherrypy.session, rating) 
-    # Redirect back to offer
-    return self.offer() 
+    # lets start another round!
+    return redirect('offer', internal=False)
 
 # app engine specific:
 # hack to make sessions work
