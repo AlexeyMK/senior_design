@@ -1,7 +1,6 @@
 """
 The server that mechanical turkers are using
 TODO:
-- ensure it runs on GAE
 - run on mturk playground
 EVENTUALLY:
 - smarter round update (IE, I know what page you should be on next, why aren't you there)
@@ -88,6 +87,12 @@ class MarketplacePage:
     # lets start another round!
     return redirect('offer', internal=False)
 
+
+  @cherrypy.expose
+  def bootstrap(self):
+    # sketchy way to start an experiment, TODO find better way
+    import bootstrap
+
 # app engine specific:
 # hack to make sessions work
 # via http://appmecha.wordpress.com/2008/10/25/cherrypy-sessions-on-gae/
@@ -100,3 +105,5 @@ cf = {"/":{'tools.sessions.on':  True,
            'tools.session.timeout': 10, 
             }}
 app = cherrypy.tree.mount(MarketplacePage(), config=cf)
+wsgiref.handlers.CGIHandler().run(app)
+
