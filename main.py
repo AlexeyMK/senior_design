@@ -1,9 +1,12 @@
 """
-The server that mechanical turkers are using
-TODO:
 - separate 'test showing' from 'real showing' (IE, good preview)
 - save name in experiment name
-- enable 'please run THIS experiment' via mturk (link experiment to HIT)
+- force accept or reject of offer (js validation)
+- get experiment design down to:
+  I'd like to run an experiment with the following configs --> OK
+    - creates AppEngine experiment, 
+    - creates mturk task, 
+    - emails when done
 EVENTUALLY:
 - smarter round update (IE, I know what page you should be on next, why aren't you there)
 """
@@ -17,6 +20,7 @@ from models import *
 import wsgiref.handlers
 import random
 import sys
+from urllib import urlencode
 
 # patch sys memcache module locations to use GAE memcache
 sys.modules['memcache'] = memcache
@@ -50,9 +54,10 @@ class MarketplacePage:
     return redirect('intro', internal=False)
 
   @cherrypy.expose
-  def intro(self, workerId='preview_mode', **rest_of_args):
-    # TODO - figure out turker id, rather than assignment ID
-    cherrypy.session['turker_id'] = workerId
+  def intro(self, **amazons_args):
+    workerId = amazons_args.get('workerId', 'preview_mode')
+    cherrypy.session['turker_id'] = workerId 
+    cherrypy.session['amazons_args'] = amazons_args
 
     # TODO: pick smarter experiment (IE, one you haven't done yet?)
     experiment = Experiment.all().filter('active =', True).get()
@@ -73,7 +78,10 @@ class MarketplacePage:
     experiment = cherrypy.session['experiment']
 
     if cherrypy.session['round'] > experiment.num_rounds_per_subject:
-      return render_for_experiment('end.html', experiment)
+      # all done, back to mturk now
+      url = ("http://workersandbox.mturk.com/mturk/externalSubmit?" +
+        urlencode(cherrypy.session['amazons_args']))
+      print url; redirect(url, internal=False)
     else:
       #TODO - ask experiment to configure this randomness 
       amount = random.randint(0,10) * 10
