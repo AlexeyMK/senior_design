@@ -1,13 +1,14 @@
 """
-- separate 'test showing' from 'real showing' (IE, good preview)
 - save name in experiment name
 - force accept or reject of offer (js validation)
+EVENTUALLY:
+- separate 'test showing' from 'real showing' (IE, good preview)
 - get experiment design down to:
   I'd like to run an experiment with the following configs --> OK
     - creates AppEngine experiment, 
     - creates mturk task, 
     - emails when done
-EVENTUALLY:
+- script that pushes and then hits the page once, so it doesn't have the first-hit hiccup
 - smarter round update (IE, I know what page you should be on next, why aren't you there)
 """
 
@@ -78,6 +79,7 @@ class MarketplacePage:
     experiment = cherrypy.session['experiment']
 
     if cherrypy.session['round'] > experiment.num_rounds_per_subject:
+      cherrypy.session['round'] = 0 # clears session for easier testing 
       # all done, back to mturk now
       url = ("http://workersandbox.mturk.com/mturk/externalSubmit?" +
         urlencode(cherrypy.session['amazons_args']))
