@@ -1,7 +1,8 @@
 """
 The server that mechanical turkers are using
 TODO:
-- run on mturk playground
+- separate 'test showing' from 'real showing' (IE, good preview)
+- save name in experiment name
 - enable 'please run THIS experiment' via mturk (link experiment to HIT)
 EVENTUALLY:
 - smarter round update (IE, I know what page you should be on next, why aren't you there)
@@ -22,7 +23,7 @@ sys.modules['memcache'] = memcache
 env = Environment(loader=FileSystemLoader('templates'))
 
 def record_transaction(session, rating=None):
-  trans = MarketTransaction(turker_id = session['turker'],
+  trans = MarketTransaction(turker_id = session['turker_id'],
                    amount_offered_cents = session['amount'],
                    accepted_offer = session['accepted'],
                    rating_left = rating,
@@ -49,16 +50,19 @@ class MarketplacePage:
     return redirect('intro', internal=False)
 
   @cherrypy.expose
-  def intro(self, turker_id="1"):
-    cherrypy.session['turker'] = turker_id
+  def intro(self, workerId='preview_mode', **rest_of_args):
+    # TODO - figure out turker id, rather than assignment ID
+    cherrypy.session['turker_id'] = workerId
 
-  # TODO: pick available experiment, set in session
+    # TODO: pick smarter experiment (IE, one you haven't done yet?)
     experiment = Experiment.all().filter('active =', True).get()
     if not experiment:
       return "Can't find an experiment for you, sorry"
     else:
       cherrypy.session['experiment'] = experiment
-      return render_for_experiment('intro.html', experiment) 
+      return render_for_experiment(
+        'intro.html', experiment, in_preview_mode=(workerId=='preview_mode')
+      )
 
   @cherrypy.expose
   def offer(self):

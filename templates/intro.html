@@ -2,7 +2,11 @@
 Welcome to our marketplace simulation, thank you for participating.
 There are two roles: offerer and receiver.
 
+{% if not in_preview_mode %}
 You are: receiver.
+{% endif %}
 TODO - way better explanation
 </pre>
+{% if not in_preview_mode %}
 <a href="offer">Continue</a>
+{% endif %}
