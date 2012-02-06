@@ -8,3 +8,6 @@ And view at http://marketplacr.appspot.com/
 
 To create a new HIT, use
 > python -c "from mturk import create_hit; print create_hit('test')"
+And view at:
+Requester: https://requestersandbox.mturk.com/mturk/manageHITs
+Offerer: https://workersandbox.mturk.com/mturk/searchbar?selectedSearchType=hitgroups&searchWords=Marketplacr

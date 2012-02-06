@@ -24,7 +24,6 @@ import wsgiref.handlers
 import random
 import sys, os
 from urllib import urlencode
-IN_PRODUCTION = False
 
 # patch sys memcache module locations to use GAE memcache
 sys.modules['memcache'] = memcache
@@ -61,6 +60,11 @@ class MarketplacePage:
   def intro(self, **amazons_args):
     workerId = amazons_args.get('workerId', 'preview_mode')
     cherrypy.session['turker_id'] = workerId 
+
+    cherrypy.session['submit_domain'] = amazons_args.get('turkSubmitTo', None)
+    if cherrypy.session['submit_domain']: # not a preview
+      del amazons_args['turkSubmitTo']
+
     cherrypy.session['amazons_args'] = amazons_args
 
     # TODO: pick smarter experiment (IE, one you haven't done yet?)
@@ -75,24 +79,25 @@ class MarketplacePage:
 
   @cherrypy.expose
   def offer(self):
+    ses = cherrypy.session
     if not 'round' in cherrypy.session:
-      cherrypy.session['round'] = 0
-    cherrypy.session['round'] += 1 # next round
+      ses['round'] = 0
+    ses['round'] += 1 # next round
 
-    experiment = cherrypy.session['experiment']
+    experiment = ses['experiment']
 
-    if cherrypy.session['round'] > experiment.num_rounds_per_subject:
-      cherrypy.session['round'] = 0 # clears session for easier testing 
+    if ses['round'] > experiment.num_rounds_per_subject:
+      ses['round'] = 0 # clears session for easier testing 
       # all done, back to mturk now
-      url = "http://workersandbox.mturk.com/mturk/externalSubmit?%s" % \
-        ('www' if IN_PRODUCTION else 'workersandbox',
-         urlencode(cherrypy.session['amazons_args']))
+      url = "%s/mturk/externalSubmit?%s" % (
+        ses['submit_domain'], urlencode(ses['amazons_args'])
+      )
       return redirect(url, internal=False)
     else:
       #TODO - ask experiment to configure this randomness 
       amount = random.randint(0,10)
-      cherrypy.session['amount'] = amount
-      cherrypy.session['start_time'] = datetime.datetime.now()
+      ses['amount'] = amount
+      ses['start_time'] = datetime.datetime.now()
       return render_for_experiment('offer.html', experiment, amount=amount)
       
   @cherrypy.expose

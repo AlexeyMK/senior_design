@@ -31,7 +31,8 @@ EXTERNAL_Q_URL = "http://marketplacr.appspot.com/intro"
 HIT_DESCRIPTION = "Play a series of simple games with a fellow turker and receive a bonus accordingly"
 HIT_TITLE = "Marketplacr experiment"
 HIT_KEYWORDS = ["experiment", "easy",]
-HIT_BASE_PRICE = 0.02
+HIT_BASE_PRICE = 0.05
+NUM_TASKS = 10
 
 HIT_CREATE_FAILED = -1
 
@@ -114,7 +115,7 @@ def create_hit(experiment_name):
   quals = Qualifications() # empty
 
   hit_id = post_html_question(title, desc, quals, 
-    num_tasks=5, price=base_price, q_url=q_url, 
+    num_tasks=NUM_TASKS, price=base_price, q_url=q_url, 
     keywords=HIT_KEYWORDS)
   if hit_id == HIT_CREATE_FAILED:
     raise BaseException("whoa, could not create that hit...")
