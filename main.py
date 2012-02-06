@@ -24,7 +24,7 @@ import wsgiref.handlers
 import random
 import sys, os
 from urllib import urlencode
-IN_PRODUCTION = True
+IN_PRODUCTION = False
 
 # patch sys memcache module locations to use GAE memcache
 sys.modules['memcache'] = memcache
@@ -90,7 +90,7 @@ class MarketplacePage:
       return redirect(url, internal=False)
     else:
       #TODO - ask experiment to configure this randomness 
-      amount = random.randint(0,10) * 10
+      amount = random.randint(0,10)
       cherrypy.session['amount'] = amount
       cherrypy.session['start_time'] = datetime.datetime.now()
       return render_for_experiment('offer.html', experiment, amount=amount)
