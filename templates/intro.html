@@ -3,10 +3,19 @@ Welcome to our marketplace simulation, thank you for participating.
 There are two roles: offerer and receiver.
 
 {% if not in_preview_mode %}
-You are: receiver.
+You have been selected to be: the receiver.
 {% endif %}
-TODO - way better explanation
+
+{% comment %} 
+TODO: parametrize funding amound and # rounds
+{% endcomment %}
+You will then play 5 games of the marketplace experiment. Here is how it works:
+
+The offerer receives 10 cents and makes a decision about how to distribute the money between the offerer and the receiver, offering (for example) 5 cents each, or 8 cents to the reciever and 2 cents to the offerer.
+
+The receiver may choose to accept or reject the offer. If the receiver accepts, both parties will receive their parts as a bonus for the experiment. If the receiver rejects, neither party will receive a bonus for that round.
+
 </pre>
 {% if not in_preview_mode %}
-<a href="offer">Continue</a>
+<a href="offer">Begin</a>
 {% endif %}
