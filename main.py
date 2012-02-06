@@ -24,6 +24,7 @@ import wsgiref.handlers
 import random
 import sys, os
 from urllib import urlencode
+IN_PRODUCTION = True
 
 # patch sys memcache module locations to use GAE memcache
 sys.modules['memcache'] = memcache
@@ -65,7 +66,7 @@ class MarketplacePage:
     # TODO: pick smarter experiment (IE, one you haven't done yet?)
     experiment = Experiment.all().filter('active =', True).get()
     if not experiment:
-      return "Can't find an experiment for you, sorry"
+      return "No valid experiment available, sorry"
     else:
       cherrypy.session['experiment'] = experiment
       return render_for_experiment(
@@ -83,9 +84,10 @@ class MarketplacePage:
     if cherrypy.session['round'] > experiment.num_rounds_per_subject:
       cherrypy.session['round'] = 0 # clears session for easier testing 
       # all done, back to mturk now
-      url = ("http://workersandbox.mturk.com/mturk/externalSubmit?" +
-        urlencode(cherrypy.session['amazons_args']))
-      print url; redirect(url, internal=False)
+      url = "http://workersandbox.mturk.com/mturk/externalSubmit?%s" % \
+        ('www' if IN_PRODUCTION else 'workersandbox',
+         urlencode(cherrypy.session['amazons_args']))
+      return redirect(url, internal=False)
     else:
       #TODO - ask experiment to configure this randomness 
       amount = random.randint(0,10) * 10
