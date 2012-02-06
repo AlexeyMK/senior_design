@@ -24,8 +24,8 @@ from os.path import *
 import urllib
 import sys,os
 
-TEST_MODE = False
-SAFETY_BREAK = False
+TEST_MODE = True
+SAFETY_BREAK = True 
 HTML_FRAME_HEIGHT = 275 #arbitrary and depends on question HTML itself
 EXTERNAL_Q_URL = "http://marketplacr.appspot.com/intro"
 HIT_DESCRIPTION = "Play a series of simple games with a fellow turker and receive a bonus accordingly"
