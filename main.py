@@ -1,15 +1,14 @@
 """
-PUSH BLOCKING
-- slightly better descriptions of experiment
-EVENTUALLY:
-- way prettier (bootstrap?)
-- save name in experiment name
-- separate 'test showing' from 'real showing' (IE, good preview)
-- get experiment design down to:
+NEXT:
+- code that can pay turkers
+- get experiment creation down to: 
   I'd like to run an experiment with the following configs --> OK
     - creates AppEngine experiment, 
     - creates mturk task, 
     - emails when done
+EVENTUALLY:
+- way prettier (bootstrap?)
+- save name in experiment name
 - script that pushes and then hits the page once, so it doesn't have the first-hit hiccup
 - smarter round update (IE, I know what page you should be on next, why aren't you there)
 """
