@@ -8,6 +8,8 @@ class Experiment(db.Model):
   num_subjects_total = db.IntegerProperty(required=True)
   num_rounds_per_subject = db.IntegerProperty(required=True)
   active = db.BooleanProperty(required=True)
+  hit_id = db.TextProperty(required=True)
+  base_price_cents = db.IntegerProperty(required=True)
 
 class MarketTransaction(db.Model):
   turker_id = db.StringProperty(required=True)

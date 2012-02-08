@@ -1,6 +1,13 @@
 """
 NEXT:
 - code that can pay turkers
+  - in mturk.py,
+  - query GQL for amt that turkers deserve
+  - send appropriate bonuses
+  TODO POSSIBILITIES for how to get rid of s~ thing:
+  - extra libs in ../appengine/remote_api_shell
+  - some setting in appengine/ext/remote_api/remote_api_stub.py
+
 - get experiment creation down to: 
   I'd like to run an experiment with the following configs --> OK
     - creates AppEngine experiment, 

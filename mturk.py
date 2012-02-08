@@ -1,4 +1,3 @@
-#!/usr/bin/python
 """Set of boto wrappers 
    To set up boto, make sure to add a ~/.boto file with your MTurk details:
    (http://code.google.com/p/boto/wiki/BotoConfig)
@@ -24,7 +23,7 @@ from os.path import *
 import urllib
 import sys,os
 
-TEST_MODE = True
+TEST_MODE = False
 SAFETY_BREAK = True 
 HTML_FRAME_HEIGHT = 275 #arbitrary and depends on question HTML itself
 EXTERNAL_Q_URL = "http://marketplacr.appspot.com/intro"
@@ -130,12 +129,35 @@ def create_hit(experiment_name):
   return hit_id
 
 def pay_for_work (h_list):
-  if SAFETY_BREAK:
-    print "Turn off safety break if you're really ready to pay."
-    return False
-  
   for experiment_name, hit_id in h_list:
     for answer, worker_id, assignment_id in get_answers(hit_id):
-      bonus_size = 0.00 #TODO - calculate based on experiment
-      if accept_and_pay(worker_id, assignment_id, bonus_size):
+      bonus_size = calculate_bonus_size(worker_id, assignment_id)/100.0
+      if SAFETY_BREAK:
+        print "Turn off safety break if you're really ready to pay."
+      else:
+        accept_and_pay(worker_id, assignment_id, bonus_size)
         print "paid: %s (+%f)" % (worker_id, bonus_size)
+
+
+#############################################################
+# Marketplacr specific code
+#############################################################
+from google.appengine.ext import db
+import models
+import remote_api
+remote_api.attach()
+# Let's make sure to hit the remote version of marketplacr here
+# http://code.google.com/appengine/articles/remote_api.html
+def calculate_bonus_size(worker_id, assignment_hit_id):
+  #TODO use hit as well here
+  query = db.GqlQuery("SELECT * FROM MarketTransaction WHERE turker_id = :1",
+                      worker_id)
+  
+  bonus_cents = 0
+  for transaction in query:
+    if transaction.accepted_offer:
+      print "%s accepted %d" % (worker_id, transaction.amount_offered_cents)
+      bonus_cents += transaction.amount_offered_cents
+    else: 
+      print "%s rejected %d" % (worker_id, transaction.amount_offered_cents)
+
