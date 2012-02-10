@@ -8,7 +8,7 @@ import sys
 ## Application specific
 SDK_DIR = '../appengine' # TODO - make this work for others
 APP_DIR = '.'
-APPID = 'marketplacr'
+APPID = None 
 EMAIL = 'alexey86@gmail.com'
 
 REMOTE_API_PATH = '/_ah/remote_api'
@@ -36,11 +36,11 @@ def attach(host=None):
             return ('foo', 'bar')
         else:
             return (EMAIL, getpass.getpass())
-    # NOTE - intentionally not passing servername
     remote_api_stub.ConfigureRemoteApi(
       APPID, REMOTE_API_PATH, auth_func, 
       save_cookies=True, secure=False,
-      rpc_server_factory=appengine_rpc.HttpRpcServer
+      rpc_server_factory=appengine_rpc.HttpRpcServer,
+      servername='marketplacr.appspot.com'
     )
     remote_api_stub.MaybeInvokeAuthentication()
     os.environ['SERVER_SOFTWARE'] = 'Development (remote_api)/1.0'
