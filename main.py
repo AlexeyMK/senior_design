@@ -1,8 +1,7 @@
 """
 NEXT:
-- code that can pay turkers
 - limit turkers to one experiment and one run in that experiment
-
+- analyze initial data
 - get experiment creation down to: 
   I'd like to run an experiment with the following configs --> OK
     - creates AppEngine experiment, 
