@@ -5,7 +5,8 @@ setup(
   author="Alexey Komissarouk",
   author_email="alexeymk@gmail.com",
   url="http://github.com/alexeymk/senior_design",
-  install_requires = ['boto', 'CherryPy', 'google-appengine'],
+  install_requires = ['boto', 'CherryPy', 'Jinja2'],
+  # TODO - get google app engine SDK to install
   )
 
 #TODO - set up a proper setup.py

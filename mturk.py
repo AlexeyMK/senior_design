@@ -24,6 +24,8 @@ import urllib
 import sys,os
 import logging
 
+logger = logging.getLogger()
+logger.setLevel(logging.INFO)
 TEST_MODE = False
 SAFETY_BREAK = True 
 HTML_FRAME_HEIGHT = 275 #arbitrary and depends on question HTML itself
@@ -163,9 +165,9 @@ def calculate_bonus_size(worker_id, assignment_hit_id):
   bonus_cents = 0
   for transaction in query:
     if transaction.accepted_offer:
-      logging.log("%s accepted %d" % (worker_id, transaction.amount_offered_cents))
+      logger.info("%s accepted %d" % (worker_id, transaction.amount_offered_cents))
       bonus_cents += transaction.amount_offered_cents
     else: 
-      logging.log("%s rejected %d" % (worker_id, transaction.amount_offered_cents))
+      logger.info("%s rejected %d" % (worker_id, transaction.amount_offered_cents))
 
   return bonus_cents 

@@ -27,6 +27,8 @@ import sys, os
 from urllib import urlencode
 
 # patch sys memcache module locations to use GAE memcache
+IN_PRODUCTION = False
+
 sys.modules['memcache'] = memcache
 env = Environment(loader=FileSystemLoader('templates'))
 
@@ -88,7 +90,8 @@ class MarketplacePage:
     experiment = ses['experiment']
 
     if ses['round'] > experiment.num_rounds_per_subject:
-      ses['round'] = 0 # clears session for easier testing 
+      if not IN_PRODUCTION:
+        ses['round'] = 0 # clears session for easier testing 
       # all done, back to mturk now
       url = "%s/mturk/externalSubmit?%s" % (
         ses['submit_domain'], urlencode(ses['amazons_args'])
