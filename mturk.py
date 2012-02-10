@@ -22,6 +22,7 @@ from boto.s3 import *
 from os.path import *
 import urllib
 import sys,os
+import logging
 
 TEST_MODE = False
 SAFETY_BREAK = True 
@@ -129,11 +130,18 @@ def create_hit(experiment_name):
   return hit_id
 
 def pay_for_work (h_list):
+  bonuses_already_paid = set()
   for experiment_name, hit_id in h_list:
     for answer, worker_id, assignment_id in get_answers(hit_id):
-      bonus_size = calculate_bonus_size(worker_id, assignment_id)/100.0
+      if not worker_id in bonuses_already_paid:
+        bonus_size = calculate_bonus_size(worker_id, assignment_id)/100.0
+        bonuses_already_paid.add(worker_id)
+      else:
+        bonus_size = 0 
       if SAFETY_BREAK:
         print "Turn off safety break if you're really ready to pay."
+        print 'would have paid %s amount %f for assignment %s' % \
+          (worker_id, bonus_size, assignment_id) 
       else:
         accept_and_pay(worker_id, assignment_id, bonus_size)
         print "paid: %s (+%f)" % (worker_id, bonus_size)
@@ -152,12 +160,12 @@ def calculate_bonus_size(worker_id, assignment_hit_id):
   #TODO use hit as well here
   query = db.GqlQuery("SELECT * FROM MarketTransaction WHERE turker_id = :1",
                       worker_id)
-  
   bonus_cents = 0
   for transaction in query:
     if transaction.accepted_offer:
-      print "%s accepted %d" % (worker_id, transaction.amount_offered_cents)
+      logging.log("%s accepted %d" % (worker_id, transaction.amount_offered_cents))
       bonus_cents += transaction.amount_offered_cents
     else: 
-      print "%s rejected %d" % (worker_id, transaction.amount_offered_cents)
+      logging.log("%s rejected %d" % (worker_id, transaction.amount_offered_cents))
 
+  return bonus_cents 
