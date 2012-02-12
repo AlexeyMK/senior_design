@@ -1,7 +1,8 @@
 """
 NEXT:
-- limit turkers to one experiment and one run in that experiment
 - analyze initial data
+  - marketexperiment CSV table:
+  - row has: amt offered | review given | everything else isn't critical 
 - get experiment creation down to: 
   I'd like to run an experiment with the following configs --> OK
     - creates AppEngine experiment, 
