@@ -171,3 +171,15 @@ def calculate_bonus_size(worker_id, assignment_hit_id):
       logger.info("%s rejected %d" % (worker_id, transaction.amount_offered_cents))
 
   return bonus_cents 
+
+def gather_experiment_data(experiment_id):
+  """produces a list of (amt, rating, accept/reject)"""
+  experiment_transactions = db.GqlQuery(
+    "SELECT * FROM MarketTransaction WHERE experiment_id = :1",
+    experiment_id)
+
+  offers = [(t.amount_offered_cents, t.rating_left, t.accepted_offer)
+    for t in experiment_transactions]
+  
+  return offers
+  # TODO - methods to push to CSV or generate chart from data
