@@ -110,14 +110,10 @@ def reject(assign_id, reason="That was not correct"):
 
 def create_hit(experiment_name): 
   # TODO - parametrize by experiment conditions
-  q_url = EXTERNAL_Q_URL
-  desc = HIT_DESCRIPTION 
-  title = HIT_TITLE 
-  base_price = HIT_BASE_PRICE
   quals = Qualifications() # empty
 
-  hit_id = post_html_question(title, desc, quals, 
-    num_tasks=NUM_TASKS, price=base_price, q_url=q_url, 
+  hit_id = post_html_question(HIT_TITLE, HIT_DESCRIPTION, quals, 
+    num_tasks=NUM_TASKS, price=HIT_BASE_PRICE, q_url=EXTERNAL_Q_URL
     keywords=HIT_KEYWORDS)
   if hit_id == HIT_CREATE_FAILED:
     raise BaseException("whoa, could not create that hit...")
