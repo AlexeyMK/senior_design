@@ -1,12 +1,7 @@
 """
-NEXT:
-- get experiment creation down to: 
-  I'd like to run an experiment with the following configs --> OK
-    - creates AppEngine experiment, 
-    - creates mturk task, 
-    - emails when done
+- analyze data in spreadsheet (done)
+- push latest version to production
 EVENTUALLY:
-- save name in experiment name
 - script that pushes and then hits the page once, so it doesn't have the first-hit hiccup
 - smarter round update (IE, I know what page you should be on next, why aren't you there)
 """
@@ -38,7 +33,7 @@ def record_transaction(session, rating=None):
                    start_time = session['start_time'],
                    end_time = datetime.datetime.now(),
                    experiment = session['experiment']
-        )
+  )
   trans.put() # save
   return trans
 

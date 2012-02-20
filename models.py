@@ -1,13 +1,17 @@
-import datetime
 from google.appengine.ext import db
 from google.appengine.api import users
+
+
+import datetime
+import json
+
 
 class Experiment(db.Model):
   def __init__(self, *args, **kwargs):
     """jsonize the conditions"""
     conditions = kwargs.get('conditions', {})
-    kwargs['conditions_json'] = #TODO AMK FROM HERE
-
+    kwargs['conditions_json'] = json.dumps(conditions) 
+    super(Experiment, self).__init__(*args, **kwargs)
 
   name = db.TextProperty()
   conditions_json = db.TextProperty() # TODO
@@ -30,4 +34,3 @@ class MarketTransaction(db.Model):
   end_time = db.DateTimeProperty(required=True)
 
 #TODO here - 'partner' - bot descriptions, per experiment...
-

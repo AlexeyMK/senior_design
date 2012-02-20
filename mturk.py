@@ -24,6 +24,7 @@ import urllib
 import sys,os
 import logging
 import pickle
+import csv
 
 logger = logging.getLogger()
 logger.setLevel(logging.INFO)
@@ -34,8 +35,9 @@ EXTERNAL_Q_URL = "http://marketplacr.appspot.com/intro"
 HIT_DESCRIPTION = "Play a series of simple games with a fellow turker and receive a bonus accordingly"
 HIT_TITLE = "Marketplacr experiment"
 HIT_KEYWORDS = ["experiment", "easy",]
-HIT_BASE_PRICE = 0.05
+BASE_PRICE_CENTS = 5
 NUM_TASKS = 10
+NUM_ROUNDS_PER_SUBJECT = 5
 
 HIT_CREATE_FAILED = -1
 
@@ -46,7 +48,7 @@ else:
   print 'real life'
   conn = MTurkConnection()
 
-def post_html_question(title, description, quals, num_tasks, price, q_url, 
+def post_html_question(title, description, quals, num_tasks, price_cents, q_url, 
   duration_s=300, keywords=None):
   """Wrapper for creating & posting 'ExternalQuestion' on MTurk.
      
@@ -69,7 +71,7 @@ def post_html_question(title, description, quals, num_tasks, price, q_url,
     title=title,
     description=description,
     keywords=keywords,
-    reward=Price(float(price)),
+    reward=Price(price_cents/100.0),
     max_assignments=num_tasks,
     duration=duration_s,
     qualifications=quals
@@ -114,7 +116,7 @@ def create_hit(experiment_name):
   quals = Qualifications() # empty
 
   hit_id = post_html_question(HIT_TITLE, HIT_DESCRIPTION, quals, 
-    num_tasks=NUM_TASKS, price=HIT_BASE_PRICE, q_url=EXTERNAL_Q_URL
+    num_tasks=NUM_TASKS, price_cents=BASE_PRICE_CENTS, q_url=EXTERNAL_Q_URL,
     keywords=HIT_KEYWORDS)
   if hit_id == HIT_CREATE_FAILED:
     raise BaseException("whoa, could not create that hit...")
@@ -155,19 +157,27 @@ import remote_api
 # http://code.google.com/appengine/articles/remote_api.html
 remote_api.attach()
 
-def create_experiment(name, **experiment_kwargs)
+def create_experiment(name, **experiment_kwargs):
   """ recommended arguments for experiment: 
   
   """
-  #2. create HIT itself in mturk, ensure works worked
-  #1. create experiment object, save
-  experiment = models.Experiment(
-    name=name,
-    conditions = experiment_kwargs['conditions'] or {}
-    
-  #3. attach hit to experiment, save
-  
+  hit_id = create_hit(name)
+  if not hit_id:
+    raise BaseException("failed to create HIT, so not making experiment")
 
+  experiment = models.Experiment(
+    base_price_cents=BASE_PRICE_CENTS,
+    num_rounds_per_subject=NUM_ROUNDS_PER_SUBJECT,
+    num_subjects_total=NUM_TASKS,
+    name=name,
+    hit_id=hit_id,
+    conditions=experiment_kwargs.get('conditions', {}),
+    active=True,
+  )
+
+  print "Experiment %s created." % experiment.name
+  experiment.put()
+  return experiment
 
 def calculate_bonus_size(worker_id, assignment_hit_id):
   #TODO use hit as well here
@@ -182,15 +192,19 @@ def calculate_bonus_size(worker_id, assignment_hit_id):
       logger.info("%s rejected %d" % (worker_id, transaction.amount_offered_cents))
 
   return bonus_cents 
-
-def gather_experiment_data(experiment_id):
-  """produces a list of (amt, rating, accept/reject)"""
+  
+def gather_experiment_data(experiment_id): 
+  """produces a list of (amt, rating, accept/reject)""" 
   experiment_transactions = db.GqlQuery(
-    "SELECT * FROM MarketTransaction WHERE experiment_id = :1",
-    experiment_id)
-
+    "SELECT * FROM MarketTransaction WHERE experiment = " + 
+    "KEY('Experiment', :1)", experiment_id) 
   offers = [(t.amount_offered_cents, t.rating_left, t.accepted_offer)
     for t in experiment_transactions]
-  
+
   return offers
   # TODO - methods to push to CSV or generate chart from data
+
+def write_results_to_csv(csv_triples, output_name):
+  """ takes gather_experiment_data triples and writes them to csv"""
+  writer = csv.writer(open(output_name, 'w'))
+  for triple in csv_triples:
