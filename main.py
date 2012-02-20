@@ -1,6 +1,9 @@
 """
-- analyze data in spreadsheet (done)
-- push latest version to production
+NEXT:
+- prettier data visualization step
+- run correlation regression
+- make sure new experiments can still be run
+- adjust pricing model and run new 'base case'
 EVENTUALLY:
 - script that pushes and then hits the page once, so it doesn't have the first-hit hiccup
 - smarter round update (IE, I know what page you should be on next, why aren't you there)
