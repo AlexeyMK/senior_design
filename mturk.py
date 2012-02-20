@@ -23,6 +23,7 @@ from os.path import *
 import urllib
 import sys,os
 import logging
+import pickle
 
 logger = logging.getLogger()
 logger.setLevel(logging.INFO)
@@ -118,7 +119,6 @@ def create_hit(experiment_name):
   if hit_id == HIT_CREATE_FAILED:
     raise BaseException("whoa, could not create that hit...")
 
-  import pickle
   try:
     hits = pickle.load(open('hits.pickle', 'rb'))
   except:
@@ -151,9 +151,24 @@ def pay_for_work (h_list):
 from google.appengine.ext import db
 import models
 import remote_api
-remote_api.attach()
 # Let's make sure to hit the remote version of marketplacr here
 # http://code.google.com/appengine/articles/remote_api.html
+remote_api.attach()
+
+def create_experiment(name, **experiment_kwargs)
+  """ recommended arguments for experiment: 
+  
+  """
+  #2. create HIT itself in mturk, ensure works worked
+  #1. create experiment object, save
+  experiment = models.Experiment(
+    name=name,
+    conditions = experiment_kwargs['conditions'] or {}
+    
+  #3. attach hit to experiment, save
+  
+
+
 def calculate_bonus_size(worker_id, assignment_hit_id):
   #TODO use hit as well here
   query = db.GqlQuery("SELECT * FROM MarketTransaction WHERE turker_id = :1",

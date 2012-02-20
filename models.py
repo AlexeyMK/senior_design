@@ -3,7 +3,13 @@ from google.appengine.ext import db
 from google.appengine.api import users
 
 class Experiment(db.Model):
-  description = db.TextProperty()
+  def __init__(self, *args, **kwargs):
+    """jsonize the conditions"""
+    conditions = kwargs.get('conditions', {})
+    kwargs['conditions_json'] = #TODO AMK FROM HERE
+
+
+  name = db.TextProperty()
   conditions_json = db.TextProperty() # TODO
   num_subjects_total = db.IntegerProperty(required=True)
   num_rounds_per_subject = db.IntegerProperty(required=True)
