@@ -1,7 +1,6 @@
 #!/usr/local/bin/pythonw
-
 """ note: use (at least on alexey's osx) /usr/local/bin/pythonw
-sample code
+Based on http://www.scipy.org/Cookbook/LinearRegression
 """
 from scipy import linspace, polyval, polyfit, sqrt, stats, randn
 from pylab import plot, title, show , legend
@@ -31,9 +30,9 @@ def plot_linreg(tuples):
 
   #matplotlib ploting
   title('Linear Regression')
-  plot(xs,ys,'g.')
-  plot(xs,expected_ys,'r.-')
-  legend(['actual', 'regression'])
+  plot(xs,ys,'g.', label="actual")
+  plot(xs,expected_ys,'r.-', label="expected")
+  legend(['actual',b'expected'])
   show()
 
 #Linear regression using stats.linregress
