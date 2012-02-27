@@ -3,7 +3,7 @@
 Based on http://www.scipy.org/Cookbook/LinearRegression
 """
 from scipy import linspace, polyval, polyfit, sqrt, stats, randn
-from pylab import plot, title, show , legend
+from pylab import plot, title, show, legend, xlabel, ylabel
 
 
 def mean_squared_error(tuples):
@@ -33,9 +33,6 @@ def plot_linreg(tuples):
   plot(xs,ys,'g.', label="actual")
   plot(xs,expected_ys,'r.-', label="expected")
   legend(['actual',b'expected'])
+  xlabel('Amount offered (c)')
+  ylabel('Rating given (1-5 stars)')
   show()
-
-#Linear regression using stats.linregress
-#(a_s,b_s,r,tt,stderr)=stats.linregress(t,xn)
-#print('Linear regression using stats.linregress')
-#print('parameters: a=%.2f b=%.2f \nregression: a=%.2f b=%.2f, std error= %.3f' % (a,b,a_s,b_s,stderr))
