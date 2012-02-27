@@ -10,11 +10,15 @@ To push to google app engine, use
 
 And view at http://marketplacr.appspot.com/
 
-To create a new HIT, use
+To create a new HIT, follow the instructions at 
 
-> python -c "from mturk import create_hit; print create_hit('test')"
+> python mturk.py 
 
 And view at:
 
 - Requester: https://requestersandbox.mturk.com/mturk/manageHITs
 - Offerer: https://workersandbox.mturk.com/mturk/searchbar?selectedSearchType=hitgroups&searchWords=Marketplacr
+
+(For real hits, view at:)
+- Requester: https://requester.mturk.com/mturk/manageHITs
+- Offerer: https://mturk.com/mturk/searchbar?selectedSearchType=hitgroups&searchWords=Marketplacr
