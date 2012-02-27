@@ -4,9 +4,16 @@
 """
 print """Usage: 
 # (1) generate the experiment: 
-# print create_hit(experiment_name)
+# print create_experiment(experiment_name)
 # (2) pay participants: 
-# pay_for_work(hit_list5)
+# pay_for_experiment(experiment_name)
+# (3) download and save results:
+# data_triples = gather_experiment_data(experiment_id)
+# write_results_to_csv(data_triples, "results.csv")
+# (4) analyze resuls 
+# import analysis 
+# error = mean_squared_error(data_triples)
+# plot_linreg(data_triples) 
 
 In testmode, you can verify that your thing got pushed here:
 Requester: https://requestersandbox.mturk.com/mturk/manageHITs
@@ -35,7 +42,7 @@ EXTERNAL_Q_URL = "http://marketplacr.appspot.com/intro"
 HIT_DESCRIPTION = "Play a series of simple games with a fellow turker and receive a bonus accordingly"
 HIT_TITLE = "Marketplacr experiment"
 HIT_KEYWORDS = ["experiment", "easy",]
-BASE_PRICE_CENTS = 5
+BASE_PRICE_CENTS = 3
 NUM_TASKS = 10
 NUM_ROUNDS_PER_SUBJECT = 5
 
@@ -129,7 +136,7 @@ def create_hit(experiment_name):
   pickle.dump(hits, open('hits.pickle', 'wb'))
   return hit_id
 
-def pay_for_work (h_list):
+def pay_for_work(h_list):
   bonuses_already_paid = set()
   for experiment_name, hit_id in h_list:
     for answer, worker_id, assignment_id in get_answers(hit_id):
@@ -179,6 +186,19 @@ def create_experiment(name, **experiment_kwargs):
   experiment.put()
   return experiment
 
+def pay_for_experiment(experiment_name):
+  query = db.GqlQuery("SELECT * FROM Experiment WHERE experiment_name = :1",
+                       experiment_name)
+
+  if query.count() == 0:
+    raise Exception("Could not find experiment %s" % experiment_name)
+  elif query.count() > 1:
+    raise Exception("Found too many experiments named %s" % experiment_name)
+
+  experiment = query.get()
+  #TODO - make this generic (IE, mturk layer takes a func to calculate pay)
+  pay_for_work([experiment_name, experiment.hit_id])
+
 def calculate_bonus_size(worker_id, assignment_hit_id):
   #TODO use hit as well here
   query = db.GqlQuery("SELECT * FROM MarketTransaction WHERE turker_id = :1",
@@ -193,18 +213,24 @@ def calculate_bonus_size(worker_id, assignment_hit_id):
 
   return bonus_cents 
   
-def gather_experiment_data(experiment_id): 
+def gather_experiment_data(experiment_name): 
   """produces a list of (amt, rating, accept/reject)""" 
+  experiment = db.GqlQuery("SELECT * FROM Experiment WHERE name = :1", 
+    experiment_name).get()
+  if not experiment:
+    raise Exception("Could not find experiment named %s" % experiment_name)
+
   experiment_transactions = db.GqlQuery(
     "SELECT * FROM MarketTransaction WHERE experiment = " + 
-    "KEY('Experiment', :1)", experiment_id) 
+    "KEY('Experiment', :1)", experiment.id) 
+  #TODO - just use experiment.transaction_set or similar here
   offers = [(t.amount_offered_cents, t.rating_left, t.accepted_offer)
     for t in experiment_transactions]
 
   return offers
-  # TODO - methods to push to CSV or generate chart from data
 
 def write_results_to_csv(csv_triples, output_name):
   """ takes gather_experiment_data triples and writes them to csv"""
   writer = csv.writer(open(output_name, 'w'))
-  for triple in csv_triples:
+  writer.write("Amount offered", "Rating Left", "Accepted offer?")
+  writer.writerows(csv_triples)

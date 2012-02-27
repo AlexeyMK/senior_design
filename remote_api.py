@@ -32,6 +32,7 @@ from google.appengine.tools import appengine_rpc
 
 def attach(host=None):
     def auth_func():
+        print "(Hint: Google Password)"
         if host and host.startswith('localhost'):
             return ('foo', 'bar')
         else:

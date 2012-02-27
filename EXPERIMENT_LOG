@@ -6,5 +6,5 @@ Conditions: none to speak of really, just running an experiment to get started a
 
 Result: A couple of turkers were able to get in double-dips. Learned how to fix that, will implement next, as well as looking at the ratings and correlation between accepting/rejecting and amt offered, and review/amt offered.
 
-
-
+Analysis: Mean squared error (though we'll need to adjust moving forward) was 0.99, and the resulting chart looks like <LINK>.
+Also, I'm currently throwing away did-not-reviews, which does not seem like a useful analysis trick. Hopefully I'll find a better alternative moving forward.
