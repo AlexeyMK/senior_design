@@ -22,3 +22,9 @@ And view at:
 (For real hits, view at:)
 - Requester: https://requester.mturk.com/mturk/manageHITs
 - Offerer: https://mturk.com/mturk/searchbar?selectedSearchType=hitgroups&searchWords=Marketplacr
+
+
+TODOS:
+-----
+ - evaluate base case
+ - think about first things we want to vary
