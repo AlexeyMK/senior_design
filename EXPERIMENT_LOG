@@ -8,3 +8,9 @@ Result: A couple of turkers were able to get in double-dips. Learned how to fix 
 
 Analysis: Mean squared error (though we'll need to adjust moving forward) was 0.99, and the resulting chart looks like <LINK>.
 Also, I'm currently throwing away did-not-reviews, which does not seem like a useful analysis trick. Hopefully I'll find a better alternative moving forward.
+
+Monday, Feb 27: running second experiment
+Name (rather than ID): base_case_2 
+Same as first, but lowered price to three cents
+Not changing much, but the framework to quickly run and analyze experiments is now in place.
+Cost: 3c * 10 + max of 10c * 5 * 10, so 5.30, expecting ~half.

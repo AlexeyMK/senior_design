@@ -8,7 +8,7 @@ print """Usage:
 # (2) pay participants: 
 # pay_for_experiment(experiment_name)
 # (3) download and save results:
-# data_triples = gather_experiment_data(experiment_id)
+# data_triples = gather_experiment_data(experiment_name)
 # write_results_to_csv(data_triples, "results.csv")
 # (4) analyze resuls 
 # import analysis 
@@ -35,7 +35,7 @@ import csv
 
 logger = logging.getLogger()
 logger.setLevel(logging.INFO)
-TEST_MODE = True 
+TEST_MODE = False 
 SAFETY_BREAK = True 
 HTML_FRAME_HEIGHT = 275 #arbitrary and depends on question HTML itself
 EXTERNAL_Q_URL = "http://marketplacr.appspot.com/intro"
