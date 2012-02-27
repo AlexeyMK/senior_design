@@ -1,7 +1,5 @@
 """
 NEXT:
-- prettier data visualization step
-- run correlation regression
 - make sure new experiments can still be run
 - adjust pricing model and run new 'base case'
 EVENTUALLY:
