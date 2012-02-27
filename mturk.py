@@ -176,13 +176,13 @@ def create_experiment(name, **experiment_kwargs):
     base_price_cents=BASE_PRICE_CENTS,
     num_rounds_per_subject=NUM_ROUNDS_PER_SUBJECT,
     num_subjects_total=NUM_TASKS,
-    name=name,
+    experiment_name=name,
     hit_id=hit_id,
     conditions=experiment_kwargs.get('conditions', {}),
     active=True,
   )
 
-  print "Experiment %s created." % experiment.experiment_name)
+  print "Experiment %s created." % experiment.experiment_name
   experiment.put()
   return experiment
 
@@ -215,7 +215,7 @@ def calculate_bonus_size(worker_id, assignment_hit_id):
   
 def gather_experiment_data(experiment_name): 
   """produces a list of (amt, rating, accept/reject)""" 
-  experiment = db.GqlQuery("SELECT * FROM Experiment WHERE name = :1", 
+  experiment = db.GqlQuery("SELECT * FROM Experiment WHERE experiment_name = :1", 
     experiment_name).get()
   if not experiment:
     raise Exception("Could not find experiment named %s" % experiment_name)

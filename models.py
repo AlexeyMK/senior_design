@@ -13,13 +13,13 @@ class Experiment(db.Model):
     kwargs['conditions_json'] = json.dumps(conditions) 
     super(Experiment, self).__init__(*args, **kwargs)
 
-  experiment_name = db.TextProperty()
+  experiment_name = db.StringProperty()
   conditions_json = db.TextProperty() # TODO
   num_subjects_total = db.IntegerProperty(required=True)
   num_rounds_per_subject = db.IntegerProperty(required=True)
   active = db.BooleanProperty(required=True)
-  hit_id = db.TextProperty()#required=True)
-  base_price_cents = db.IntegerProperty()#required=True)
+  hit_id = db.StringProperty(required=True)
+  base_price_cents = db.IntegerProperty(required=True)
 
 class MarketTransaction(db.Model):
   turker_id = db.StringProperty(required=True)
