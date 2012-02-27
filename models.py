@@ -13,7 +13,7 @@ class Experiment(db.Model):
     kwargs['conditions_json'] = json.dumps(conditions) 
     super(Experiment, self).__init__(*args, **kwargs)
 
-  name = db.TextProperty()
+  experiment_name = db.TextProperty()
   conditions_json = db.TextProperty() # TODO
   num_subjects_total = db.IntegerProperty(required=True)
   num_rounds_per_subject = db.IntegerProperty(required=True)

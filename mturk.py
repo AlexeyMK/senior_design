@@ -182,7 +182,7 @@ def create_experiment(name, **experiment_kwargs):
     active=True,
   )
 
-  print "Experiment %s created." % experiment.name
+  print "Experiment %s created." % experiment.experiment_name)
   experiment.put()
   return experiment
 
