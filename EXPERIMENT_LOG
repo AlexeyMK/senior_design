@@ -11,6 +11,9 @@ Also, I'm currently throwing away did-not-reviews, which does not seem like a us
 
 Monday, Feb 27: running second experiment
 Name (rather than ID): base_case_2 
+MTurk ID (just in case): 2PT727M0IGFKNO7RBNJVI4VIWAAEZ4
 Same as first, but lowered price to three cents
 Not changing much, but the framework to quickly run and analyze experiments is now in place.
 Cost: 3c * 10 + max of 10c * 5 * 10, so 5.30, expecting ~half.
+
+Result: A couple of turkers emailed to complain that I hadn't paid them yet.  Glancing at the results, I see one turker rejecting offers as high as 5/10, so showing behavior very similar to real subjects. Very cool.

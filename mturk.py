@@ -197,7 +197,7 @@ def pay_for_experiment(experiment_name):
 
   experiment = query.get()
   #TODO - make this generic (IE, mturk layer takes a func to calculate pay)
-  pay_for_work([experiment_name, experiment.hit_id])
+  pay_for_work([(experiment_name, experiment.hit_id), ])
 
 def calculate_bonus_size(worker_id, assignment_hit_id):
   #TODO use hit as well here
@@ -219,10 +219,9 @@ def gather_experiment_data(experiment_name):
     experiment_name).get()
   if not experiment:
     raise Exception("Could not find experiment named %s" % experiment_name)
-
+  print experiment
   experiment_transactions = db.GqlQuery(
-    "SELECT * FROM MarketTransaction WHERE experiment = " + 
-    "KEY('Experiment', :1)", experiment.id) 
+    "SELECT * FROM MarketTransaction WHERE experiment = :1", experiment.key()) 
   #TODO - just use experiment.transaction_set or similar here
   offers = [(t.amount_offered_cents, t.rating_left, t.accepted_offer)
     for t in experiment_transactions]
