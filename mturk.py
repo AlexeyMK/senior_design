@@ -219,7 +219,6 @@ def gather_experiment_data(experiment_name):
     experiment_name).get()
   if not experiment:
     raise Exception("Could not find experiment named %s" % experiment_name)
-  print experiment
   experiment_transactions = db.GqlQuery(
     "SELECT * FROM MarketTransaction WHERE experiment = :1", experiment.key()) 
   #TODO - just use experiment.transaction_set or similar here
@@ -231,5 +230,5 @@ def gather_experiment_data(experiment_name):
 def write_results_to_csv(csv_triples, output_name):
   """ takes gather_experiment_data triples and writes them to csv"""
   writer = csv.writer(open(output_name, 'w'))
-  writer.write("Amount offered", "Rating Left", "Accepted offer?")
+  writer.writerow(["Amount offered", "Rating Left", "Accepted offer?"])
   writer.writerows(csv_triples)

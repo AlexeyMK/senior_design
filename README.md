@@ -27,4 +27,5 @@ And view at:
 TODOS:
 -----
  - evaluate base case
+ - Find bug in current mean squared error (for triples of base_case_2)
  - think about first things we want to vary
