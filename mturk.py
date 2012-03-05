@@ -30,10 +30,11 @@ import csv
 
 logger = logging.getLogger()
 logger.setLevel(logging.INFO)
-TEST_MODE = False 
+TEST_MODE = True 
 SAFETY_BREAK = True 
 HTML_FRAME_HEIGHT = 275 #arbitrary and depends on question HTML itself
-EXTERNAL_Q_URL = "http://marketplacr.appspot.com/intro"
+EXTERNAL_Q_URL = "http://localhost:8080/intro" if TEST_MODE else \
+                 "http://marketplacr.appspot.com/intro"
 HIT_DESCRIPTION = "Play a series of simple games with a fellow turker and receive a bonus accordingly"
 HIT_TITLE = "Marketplacr experiment"
 HIT_KEYWORDS = ["experiment", "easy",]
@@ -114,11 +115,13 @@ def reject(assign_id, reason="That was not correct"):
     return False
 
 def create_hit(experiment_name): 
-  # TODO - parametrize by experiment conditions
   quals = Qualifications() # empty
+  url = "%s?%s" % (EXTERNAL_Q_URL, urllib.urlencode({
+    "experiment_name":experiment_name
+  }))
 
   hit_id = post_html_question(HIT_TITLE, HIT_DESCRIPTION, quals, 
-    num_tasks=NUM_TASKS, price_cents=BASE_PRICE_CENTS, q_url=EXTERNAL_Q_URL,
+    num_tasks=NUM_TASKS, price_cents=BASE_PRICE_CENTS, q_url=url,
     keywords=HIT_KEYWORDS)
   if hit_id == HIT_CREATE_FAILED:
     raise BaseException("whoa, could not create that hit...")

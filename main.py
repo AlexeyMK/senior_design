@@ -54,10 +54,15 @@ class MarketplacePage:
 
     cherrypy.session['amazons_args'] = amazons_args
 
-    # TODO: pick smarter experiment (IE, one you haven't done yet?)
-    experiment = Experiment.all().filter('active =', True).get()
+    experiment_name = amazons_args.get('experiment_name', None)
+    if not experiment_name:
+      return "Can't find experiment_name in arguments"
+    experiment = Experiment.all().filter(
+      'experiment_name =', experiment_name).get()
     if not experiment:
-      return "No valid experiment available, sorry"
+      return "Can't find experiment %s, sorryj" % experiment_name
+    elif not experiment.active:
+      return "That experiment is no longer active, sorry"
     else:
       cherrypy.session['experiment'] = experiment
       return render_for_experiment(
