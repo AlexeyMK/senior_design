@@ -59,5 +59,6 @@ Later:
 TODOS:
 -----
  - run multiple experiments in parralel (via extra argument)
+   - NEXT (from here AMK): thread conditions in experiment creation all through app
  - figure out which tests are easiest to run next (2 or 3)
  - do a slightly nicer statistical job of analyzing the results 
