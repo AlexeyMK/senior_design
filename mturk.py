@@ -31,9 +31,10 @@ import csv
 logger = logging.getLogger()
 logger.setLevel(logging.INFO)
 TEST_MODE = True 
+LOCAL_MODE = False
 SAFETY_BREAK = True 
 HTML_FRAME_HEIGHT = 275 #arbitrary and depends on question HTML itself
-EXTERNAL_Q_URL = "http://localhost:8080/intro" if TEST_MODE else \
+EXTERNAL_Q_URL = "http://localhost:8080/intro" if LOCAL_MODE else \
                  "http://marketplacr.appspot.com/intro"
 HIT_DESCRIPTION = "Play a series of simple games with a fellow turker and receive a bonus accordingly"
 HIT_TITLE = "Marketplacr experiment"

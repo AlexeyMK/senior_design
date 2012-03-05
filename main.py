@@ -60,7 +60,7 @@ class MarketplacePage:
     experiment = Experiment.all().filter(
       'experiment_name =', experiment_name).get()
     if not experiment:
-      return "Can't find experiment %s, sorryj" % experiment_name
+      return "Can't find experiment %s, sorry" % experiment_name
     elif not experiment.active:
       return "That experiment is no longer active, sorry"
     else:
