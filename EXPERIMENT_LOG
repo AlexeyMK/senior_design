@@ -6,7 +6,7 @@ Conditions: none to speak of really, just running an experiment to get started a
 
 Result: A couple of turkers were able to get in double-dips. Learned how to fix that, will implement next, as well as looking at the ratings and correlation between accepting/rejecting and amt offered, and review/amt offered.
 
-Analysis: Mean squared error (though we'll need to adjust moving forward) was 0.99, and the resulting chart looks like <LINK>.
+Analysis: Mean squared error (though we'll need to adjust moving forward) was 0.99, and the resulting chart looks is in results/
 Also, I'm currently throwing away did-not-reviews, which does not seem like a useful analysis trick. Hopefully I'll find a better alternative moving forward.
 
 Monday, Feb 27: running second experiment
@@ -17,3 +17,5 @@ Not changing much, but the framework to quickly run and analyze experiments is n
 Cost: 3c * 10 + max of 10c * 5 * 10, so 5.30, expecting ~half.
 
 Result: A couple of turkers emailed to complain that I hadn't paid them yet.  Glancing at the results, I see one turker rejecting offers as high as 5/10, so showing behavior very similar to real subjects. Very cool.
+
+Analysis: Mean Squared error was 1.21, a slight increase. No idea why, though (difference = 3 cents base vs 5). Saving chart in results/.  Moving to a couple of alternate experiments to make sure we can run them in parralel.

@@ -26,6 +26,8 @@ And view at:
 
 TODOS:
 -----
+ - make the recommended instructions work (maybe one step?) - need to int the triples
+ - make list of all test ideas
+ - figure out which tests are easiest to run next (2 or 3)
  - evaluate base case
- - Find bug in current mean squared error (for triples of base_case_2)
  - think about first things we want to vary
