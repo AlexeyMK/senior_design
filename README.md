@@ -23,11 +23,41 @@ And view at:
 - Requester: https://requester.mturk.com/mturk/manageHITs
 - Offerer: https://mturk.com/mturk/searchbar?selectedSearchType=hitgroups&searchWords=Marketplacr
 
+List of experiments to run (+ estimates)
+===========================
+Now:
+----
+- [10m] Text: Guarantee anonymous reviews
+- [10m] Text: Guarantee review will be shared
+- [30m] Immediate feedback: "Thank you for your review, X won't be shown anymore" if bad
+
+Later:
+------
+
+- [2hr] Show (vs don't show) past ratings
+    - [10m] Show past rating in diffent scale (say out of 10, or ranking) 
+    - [1hr] Emphasize polarized past reviews
+- [4hr] Add more personality to the other side (name profile, etc)
+- [1hr] Rank past interactions instead of asking individually (rank "this vs last")
+- [5hr] Rank past interactions instead of asking individually (rank "interactions this session")
+- [10m] Text: Motivate leaving a review, personal gain (filtering out bad partners)
+- [10m] Text: Motivate leaving a review, collective gain (cleans system, important)
+- [10m] Text: Motivate leaving a review, base case (experimental validity...)
+- [30m] Force leaving a review to be mandatory 
+- [4hr] Pay for accurate reviews (immediately when left)
+  - [2hr] Pay for accurate reviews (at the end, and let them know before)
+- [1hr] Show amount of $$ earned so far
+- [3hr[ Animation when review is left (happy face/sad face, trash can, etc)
+- [30m] Fewer choices: Thumbs up/down
+  - [5m] Fewer choices: 1/2/3 
+  - [5m] More choices: 1-->10
+  - [5m] Different framing (-2...2)
+- [2hr] Rate on speed AND fairness rather than 'in general'
+- [5hr] Ask for all feedback afterwards (end of session)
+  -[2hr] Ask for all feedback afterwards (contact via mturk)
 
 TODOS:
 -----
- - make the recommended instructions work (maybe one step?) - need to int the triples
- - make list of all test ideas
+ - run multiple experiments in parralel (via extra argument)
  - figure out which tests are easiest to run next (2 or 3)
- - evaluate base case
- - think about first things we want to vary
+ - do a slightly nicer statistical job of analyzing the results 

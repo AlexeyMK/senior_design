@@ -8,12 +8,7 @@ print """Usage:
 # (2) pay participants: 
 # pay_for_experiment(experiment_name)
 # (3) download and save results:
-# data_triples = gather_experiment_data(experiment_name)
-# write_results_to_csv(data_triples, "results.csv")
-# (4) analyze resuls 
-# import analysis 
-# error = mean_squared_error(data_triples)
-# plot_linreg(data_triples) 
+# analyze_experiment(experiment_name) 
 
 In testmode, you can verify that your thing got pushed here:
 Requester: https://requestersandbox.mturk.com/mturk/manageHITs
@@ -212,6 +207,16 @@ def calculate_bonus_size(worker_id, assignment_hit_id):
       logger.info("%s rejected %d" % (worker_id, transaction.amount_offered_cents))
 
   return bonus_cents 
+
+def analyze_experiment(experiment_name):
+  data_triples = gather_experiment_data(experiment_name)
+  write_results_to_csv(data_triples, "results/%s.csv" % experiment_name)
+  import analysis 
+  error = analysis.mean_squared_error(data_triples)
+  print '-'*80 
+  print "Root Mean Squared Error of %s: %f" % (experiment_name, error)
+  print '-'*80 
+  analysis.plot_linreg(data_triples) 
   
 def gather_experiment_data(experiment_name): 
   """produces a list of (amt, rating, accept/reject)""" 
@@ -222,7 +227,7 @@ def gather_experiment_data(experiment_name):
   experiment_transactions = db.GqlQuery(
     "SELECT * FROM MarketTransaction WHERE experiment = :1", experiment.key()) 
   #TODO - just use experiment.transaction_set or similar here
-  offers = [(t.amount_offered_cents, t.rating_left, t.accepted_offer)
+  offers = [(t.amount_offered_cents, int(t.rating_left), t.accepted_offer)
     for t in experiment_transactions]
 
   return offers
