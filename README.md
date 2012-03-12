@@ -61,6 +61,7 @@ Later:
 
 TODOS:
 -----
+ - actually send email when done (super-simple with mailchimp)
  - do a slightly nicer statistical job of analyzing the results 
  - base jinja2 template which puts conditions into a top-level JSON blockj:w
-
+ - more experiments
