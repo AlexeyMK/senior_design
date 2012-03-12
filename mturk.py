@@ -4,7 +4,7 @@
 """
 print """Usage: 
 # (1) generate the experiment: 
-# print create_experiment(experiment_name)
+# print create_experiment(experiment_name, cond1=val, cond2=val, etc)
 # (2) pay participants: 
 # pay_for_experiment(experiment_name)
 # (3) download and save results:
@@ -27,11 +27,12 @@ import sys,os
 import logging
 import pickle
 import csv
+import json
 
 logger = logging.getLogger()
 logger.setLevel(logging.INFO)
-TEST_MODE = True 
-LOCAL_MODE = True
+TEST_MODE = False
+LOCAL_MODE = False
 SAFETY_BREAK = True 
 HTML_FRAME_HEIGHT = 275 #arbitrary and depends on question HTML itself
 EXTERNAL_Q_URL = "http://localhost:8080/intro" if LOCAL_MODE else \
@@ -179,7 +180,7 @@ def create_experiment(name, **experiment_kwargs):
     num_subjects_total=NUM_TASKS,
     experiment_name=name,
     hit_id=hit_id,
-    conditions=experiment_kwargs.get('conditions', {}),
+    conditions_json=json.dumps(experiment_kwargs),
     active=True,
   )
 

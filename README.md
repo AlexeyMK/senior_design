@@ -62,6 +62,7 @@ Later:
 TODOS:
 -----
  - actually send email when done (super-simple with mailchimp)
+ - some sort of tool to validate that conditions are being used correctly (relies on hard-coded dict of known conditions)
  - do a slightly nicer statistical job of analyzing the results 
  - base jinja2 template which puts conditions into a top-level JSON blockj:w
  - more experiments

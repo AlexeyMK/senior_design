@@ -19,3 +19,9 @@ Cost: 3c * 10 + max of 10c * 5 * 10, so 5.30, expecting ~half.
 Result: A couple of turkers emailed to complain that I hadn't paid them yet.  Glancing at the results, I see one turker rejecting offers as high as 5/10, so showing behavior very similar to real subjects. Very cool.
 
 Analysis: Mean Squared error was 1.21, a slight increase. No idea why, though (difference = 3 cents base vs 5). Saving chart in results/.  Moving to a couple of alternate experiments to make sure we can run them in parralel.
+
+Sunday, Mar 11: running first conditions
+Name (rather than ID): guarantee_anonymous_1, guarantee_feedback_shown_1, thank_on_bad_review_1
+Cost: ~$5 * 3 = $15
+
+Conditions: trying three variations (will separate as needed) more than anything to validate that variations work
