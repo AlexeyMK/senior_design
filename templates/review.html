@@ -2,11 +2,36 @@
 Rate the exchange (5 for very satisfied, 1 for very unsatisfied)
 </pre>
 
-<form action="finished_round" method="POST">
-<input type="radio" name="rating" value="1"> 1 </a>
-<input type="radio" name="rating" value="2"> 2 </a>
-<input type="radio" name="rating" value="3"> 3 </a>
-<input type="radio" name="rating" value="4"> 4 </a>
-<input type="radio" name="rating" value="5"> 5 </a>
-<input type="submit" value="submit" />
+<form name="rating_form" action="finished_round" method="POST">
+  <input type="radio" name="rating" value="1"> 1 </a>
+  <input type="radio" name="rating" value="2"> 2 </a>
+  <input type="radio" name="rating" value="3"> 3 </a>
+  <input type="radio" name="rating" value="4"> 4 </a>
+  <input type="radio" name="rating" value="5"> 5 </a>
+  <input type="submit" value="submit" />
 </form>
+
+<p id="feedback_after_rating"></p>
+
+<script type="text/javascript" src="/js/jquery.js"></script>
+<script>
+  $('form').submit(function (e) {
+    // avoid doudble-submission
+    e.preventDefault();
+    var form=this;
+  
+    $('#feedback_after_rating').text("Submitting...");
+
+    {% if conditions.thank_on_bad_review %}
+      // TODO - switch from jinja logic to JS-based conditions object here.
+      // grab value of rating...
+      var rating = $('input[name=rating]:checked').val();
+      if (rating === "1" || rating === "2") {
+        $('#feedback_after_rating').text("Thank you for your review; we will no longer pair you with this person.");
+      }
+    {% endif %}
+
+    // wait 2 seconds
+    setTimeout(function() {form.submit();}, 2000);
+  });
+</script>

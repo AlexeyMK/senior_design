@@ -1,20 +1,14 @@
 from google.appengine.ext import db
 from google.appengine.api import users
 
-
 import datetime
 import json
 
 
 class Experiment(db.Model):
-  def __init__(self, *args, **kwargs):
-    """jsonize the conditions"""
-    conditions = kwargs.get('conditions', {})
-    kwargs['conditions_json'] = json.dumps(conditions) 
-    super(Experiment, self).__init__(*args, **kwargs)
 
   experiment_name = db.StringProperty()
-  conditions_json = db.TextProperty() # TODO
+  conditions_json = db.TextProperty() 
   num_subjects_total = db.IntegerProperty(required=True)
   num_rounds_per_subject = db.IntegerProperty(required=True)
   active = db.BooleanProperty(required=True)

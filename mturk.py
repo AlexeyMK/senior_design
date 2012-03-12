@@ -31,7 +31,7 @@ import csv
 logger = logging.getLogger()
 logger.setLevel(logging.INFO)
 TEST_MODE = True 
-LOCAL_MODE = False
+LOCAL_MODE = True
 SAFETY_BREAK = True 
 HTML_FRAME_HEIGHT = 275 #arbitrary and depends on question HTML itself
 EXTERNAL_Q_URL = "http://localhost:8080/intro" if LOCAL_MODE else \
@@ -158,16 +158,18 @@ def pay_for_work(h_list):
 #############################################################
 from google.appengine.ext import db
 import models
-import remote_api
-# Let's make sure to hit the remote version of marketplacr here
-# http://code.google.com/appengine/articles/remote_api.html
-remote_api.attach()
+
+if not LOCAL_MODE:
+  import remote_api
+  # Let's make sure to hit the remote version of marketplacr here
+  # http://code.google.com/appengine/articles/remote_api.html
+  remote_api.attach()
 
 def create_experiment(name, **experiment_kwargs):
   """ recommended arguments for experiment: 
   
   """
-  hit_id = create_hit(name)
+  hit_id = "local_mode" if LOCAL_MODE else create_hit(name)
   if not hit_id:
     raise BaseException("failed to create HIT, so not making experiment")
 

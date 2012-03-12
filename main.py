@@ -1,14 +1,15 @@
 import cherrypy
-from cherrypy.lib.cptools import redirect
-from jinja2 import Environment, FileSystemLoader
-from google.appengine.api import memcache
-from models import *
-
+import json
 import wsgiref.handlers
 import random
 import sys, os
+
+from cherrypy.lib.cptools import redirect
+from jinja2 import Environment, FileSystemLoader
+from google.appengine.api import memcache
 from urllib import urlencode
 
+from models import *
 
 # patch sys memcache module locations to use GAE memcache
 IN_PRODUCTION = False
@@ -31,7 +32,7 @@ def record_transaction(session, rating=None):
 
 def render_for_experiment(page, experiment, **other_args):
   #TODO - headers, and general chrome/css
-  other_args['conditions'] = experiment.conditions_json
+  other_args['conditions'] = json.loads(experiment.conditions_json)
   other_args['experiment'] = experiment
   other_args['round'] = cherrypy.session.get('round')
   return env.get_template(page).render(**other_args)
