@@ -235,7 +235,7 @@ def gather_experiment_data(experiment_name):
     "SELECT * FROM MarketTransaction WHERE experiment = :1", experiment.key()) 
   #TODO - just use experiment.transaction_set or similar here
   offers = [(t.amount_offered_cents, int(t.rating_left), t.accepted_offer)
-    for t in experiment_transactions]
+    for t in experiment_transactions if t.rating_left is not None]
 
   return offers
 
