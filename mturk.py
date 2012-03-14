@@ -223,7 +223,8 @@ def analyze_experiment(experiment_name):
   print '-'*80 
   print "Root Mean Squared Error of %s: %f" % (experiment_name, error)
   print '-'*80 
-  analysis.plot_linreg(data_triples) 
+  analysis.plot_linreg(data_triples, 
+                       save_fname="results/%s.png" % experiment_name)
   
 def gather_experiment_data(experiment_name): 
   """produces a list of (amt, rating, accept/reject)""" 

@@ -28,8 +28,8 @@ List of experiments to run (+ estimates)
 
 Available Conditions:
 ---------------------
-- "thank_on_bad_review"
-- "review_will_be_anonymous"
+- "thank_on_bad_review" | True, None
+- "review_will_be_anonymous" | True, False, None
 
 Next:
 ----
@@ -59,11 +59,13 @@ Later:
 - [5hr] Ask for all feedback afterwards (end of session)
   -[2hr] Ask for all feedback afterwards (contact via mturk)
 
-  TODOS:
+TODOS:
 -----
- - analysis includes saving the charts:
-    http://matplotlib.sourceforge.net/api/pyplot_api.html#matplotlib.pyplot.savefig
- - actually send email when done (super-simple with mailchimp)
+
+ - set experiment to inactive after paying for it
+ - actually send email when done (super-simple with mailgun)
+ - list of active experiments (1,2,3) and maybe shovel integration 
+
  - some sort of tool to validate that conditions are being used correctly (relies on hard-coded dict of known conditions)
  - do a slightly nicer statistical job of analyzing the results 
  - base jinja2 template which puts conditions into a top-level JSON blockj:w

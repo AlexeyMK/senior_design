@@ -25,3 +25,5 @@ Name (rather than ID): guarantee_anonymous_1, guarantee_feedback_shown_1, thank_
 Cost: ~$5 * 3 = $15
 
 Conditions: trying three variations (will separate as needed) more than anything to validate that variations work
+
+Results: saved accordingly.  Eyeballing, it doesn't seem like the RMSE differed signficantly across conditions 

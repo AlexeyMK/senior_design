@@ -2,8 +2,8 @@
 """ note: use (at least on alexey's osx) /usr/local/bin/pythonw
 Based on http://www.scipy.org/Cookbook/LinearRegression
 """
-from scipy import linspace, polyval, polyfit, sqrt, stats, randn
-from pylab import plot, title, show, legend, xlabel, ylabel
+from scipy import linspace, polyval, polyfit, sqrt, stats
+from pylab import plot, title, show, legend, xlabel, ylabel, savefig
 
 
 def mean_squared_error(tuples):
@@ -20,7 +20,7 @@ def mean_squared_error(tuples):
 
   return err
 
-def plot_linreg(tuples):
+def plot_linreg(tuples, save_fname=None):
   """lin-reg for something like [(2,1), (4,2) (0, 5), ...]"""
   polynomial_degree = 1 
   xs = [tup[0] for tup in tuples]
@@ -36,4 +36,7 @@ def plot_linreg(tuples):
   # TODO (maybe) plot 'actual' expected line (IE, 0 --> 1, 10 --> 5?)
   xlabel('Amount offered (c)')
   ylabel('Rating given (1-5 stars)')
+  if save_fname:
+     savefig(save_fname, format="png") 
   show()
+
