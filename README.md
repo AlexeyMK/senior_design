@@ -63,7 +63,6 @@ TODOS:
 -----
  - turkers appear to be abusing the system, make them stop (restrictions)
  - ensure we have code for "ineligible for experiment"
- - set experiment to inactive after paying for it
  - actually send email when done (super-simple with mailgun)
  - list of active experiments (1,2,3) and maybe shovel integration 
 
