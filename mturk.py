@@ -22,8 +22,9 @@ from boto.mturk.price import *
 from boto.mturk.qualification import *
 from boto.s3 import *
 from os.path import *
+
 import urllib
-import sys,os
+import sys
 import logging
 import pickle
 import csv
@@ -31,9 +32,9 @@ import json
 
 logger = logging.getLogger()
 logger.setLevel(logging.INFO)
-TEST_MODE = False
+TEST_MODE = True
 LOCAL_MODE = False
-SAFETY_BREAK = True 
+SAFETY_BREAK = True
 HTML_FRAME_HEIGHT = 275 #arbitrary and depends on question HTML itself
 EXTERNAL_Q_URL = "http://localhost:8080/intro" if LOCAL_MODE else \
                  "http://marketplacr.appspot.com/intro"
@@ -137,14 +138,14 @@ def create_hit(experiment_name):
   return hit_id
 
 def pay_for_work(h_list):
-  bonuses_already_paid = set()
+  total_paid = 0.0
   for experiment_name, hit_id in h_list:
-    for answer, worker_id, assignment_id in get_answers(hit_id):
-      if not worker_id in bonuses_already_paid:
-        bonus_size = calculate_bonus_size(worker_id, assignment_id)/100.0
-        bonuses_already_paid.add(worker_id)
-      else:
-        bonus_size = 0 
+    answers = get_answers(hit_id)
+    worker_set = set([(worker, asgn_id) for ans, worker, asgn_id in answers])
+    for worker_id, assignment_id in worker_set:
+      bonus_size = calculate_bonus_size(
+        experiment_name, worker_id, assignment_id)/100.0
+      total_paid += bonus_size
       if SAFETY_BREAK:
         print "Turn off safety break if you're really ready to pay."
         print 'would have paid %s amount %f for assignment %s' % \
@@ -152,6 +153,8 @@ def pay_for_work(h_list):
       else:
         accept_and_pay(worker_id, assignment_id, bonus_size)
         print "paid: %s (+%f)" % (worker_id, bonus_size)
+
+  print "Paid (or would have paid) total of %02f" % total_paid
 
 
 #############################################################
@@ -201,15 +204,28 @@ def pay_for_experiment(experiment_name):
   #TODO - make this generic (IE, mturk layer takes a func to calculate pay)
   pay_for_work([(experiment_name, experiment.hit_id), ])
 
-def calculate_bonus_size(worker_id, assignment_hit_id):
+  # if you're paying, this experiment is done
+  experiment.active = False
+  experiment.put()
+
+def calculate_bonus_size(experiment_name, worker_id, assignment_hit_id):
   #TODO use hit as well here
-  query = db.GqlQuery("SELECT * FROM MarketTransaction WHERE turker_id = :1",
-                      worker_id)
+  experiment = models.Experiment.all().filter(
+    "experiment_name =", experiment_name).get() 
+  query = db.GqlQuery("""SELECT * FROM MarketTransaction WHERE 
+      turker_id = :1 AND experiment = :2""", 
+    worker_id, experiment.key())
+                      
   bonus_cents = 0
-  for transaction in query:
+  for idx, transaction in enumerate(query):
     if transaction.accepted_offer:
       logger.info("%s accepted %d" % (worker_id, transaction.amount_offered_cents))
-      bonus_cents += transaction.amount_offered_cents
+      if idx < 5:
+        bonus_cents += transaction.amount_offered_cents
+      else:
+        logger.info("%s got too greedy, tried more than 5 rounds!" % 
+          worker_id)
+        break
     else: 
       logger.info("%s rejected %d" % (worker_id, transaction.amount_offered_cents))
 

@@ -7,13 +7,15 @@ import sys, os
 from cherrypy.lib.cptools import redirect
 from jinja2 import Environment, FileSystemLoader
 from google.appengine.api import memcache
+from google import appengine
 from urllib import urlencode
 
 from models import *
 
-# patch sys memcache module locations to use GAE memcache
-IN_PRODUCTION = False
+IN_PRODUCTION = not os.environ.get('SERVER_SOFTWARE','').startswith(
+  'Development')
 
+# patch sys memcache module locations to use GAE memcache
 sys.modules['memcache'] = memcache
 env = Environment(loader=FileSystemLoader('templates'))
 
@@ -47,6 +49,13 @@ class MarketplacePage:
   @cherrypy.expose
   def intro(self, **amazons_args):
     workerId = amazons_args.get('workerId', 'preview_mode')
+
+    if workerId != 'preview_mode':
+      past_transaction = MarketTranscation.all().filter(
+        'turker_id = ', workerId).get()
+      if past_transaction:
+        return "You have already participated in one of our experiments"
+
     cherrypy.session['turker_id'] = workerId 
 
     cherrypy.session['submit_domain'] = amazons_args.get('turkSubmitTo', None)
