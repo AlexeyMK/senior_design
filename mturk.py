@@ -2,18 +2,6 @@
    To set up boto, make sure to add a ~/.boto file with your MTurk details:
    (http://code.google.com/p/boto/wiki/BotoConfig)
 """
-print """Usage: 
-# (1) generate the experiment: 
-# print create_experiment(experiment_name, cond1=val, cond2=val, etc)
-# (2) pay participants: 
-# pay_for_experiment(experiment_name)
-# (3) download and save results:
-# analyze_experiment(experiment_name) 
-
-In testmode, you can verify that your thing got pushed here:
-Requester: https://requestersandbox.mturk.com/mturk/manageHITs
-Turker: https://workersandbox.mturk.com/mturk/ and search for your task 
-"""
 
 #TODO: be more specific with imports
 from boto.mturk.connection import *
@@ -232,32 +220,65 @@ def calculate_bonus_size(experiment_name, worker_id, assignment_hit_id):
   return bonus_cents 
 
 def analyze_experiment(experiment_name):
-  data_triples = gather_experiment_data(experiment_name)
-  write_results_to_csv(data_triples, "results/%s.csv" % experiment_name)
-  import analysis 
-  error = analysis.mean_squared_error(data_triples)
-  print '-'*80 
-  print "Root Mean Squared Error of %s: %f" % (experiment_name, error)
-  print '-'*80 
-  analysis.plot_linreg(data_triples, 
-                       save_fname="results/%s.png" % experiment_name)
-  
-def gather_experiment_data(experiment_name): 
-  """produces a list of (amt, rating, accept/reject)""" 
   experiment = db.GqlQuery("SELECT * FROM Experiment WHERE experiment_name = :1", 
     experiment_name).get()
   if not experiment:
     raise Exception("Could not find experiment named %s" % experiment_name)
+  transactions = gather_experiment_data(experiment)
+  # for now - exclude transations where no rating was left
+  transactions = [t for t in transactions if t.rating_left is not None]
+  write_results_to_csv(transactions, "results/%s.csv" % experiment_name)
+  write_conditions_to_csv(experiment, "results/%s.json" % experiment_name)
+  import analysis 
+  analysis_trips = [
+    (t.amount_offered_cents, int(t.rating_left), t.accepted_offer) 
+  for t in transactions]
+
+  error = analysis.mean_squared_error(analysis_trips)
+  print '-'*80 
+  print "Root Mean Squared Error of %s: %f" % (experiment_name, error)
+  print '-'*80 
+  analysis.plot_linreg(analysis_trips, 
+                       save_fname="results/%s.png" % experiment_name)
+  
+def gather_experiment_data(experiment_name): 
+  """produces a list of MarketTransaction objects"""
   experiment_transactions = db.GqlQuery(
     "SELECT * FROM MarketTransaction WHERE experiment = :1", experiment.key()) 
-  #TODO - just use experiment.transaction_set or similar here
-  offers = [(t.amount_offered_cents, int(t.rating_left), t.accepted_offer)
-    for t in experiment_transactions if t.rating_left is not None]
 
-  return offers
+  return experiment_transactions 
 
-def write_results_to_csv(csv_triples, output_name):
-  """ takes gather_experiment_data triples and writes them to csv"""
+def write_conditions_to_csv(experiment, output_name):
+  with open(output_name, 'w') as writer:
+    writer.write(experiment.conditions_json)
+
+def write_results_to_csv(transactions, output_name):
+  """ takes list of Transaction objects and writes them to csv"""
   writer = csv.writer(open(output_name, 'w'))
-  writer.writerow(["Amount offered", "Rating Left", "Accepted offer?"])
-  writer.writerows(csv_triples)
+  writer.writerow([
+    "Amount offered", "Rating Left", "Accepted offer?", "Turker ID"])
+  writer.writerows([
+    (t.amount_offered_cents, t.rating_left, t.accepted_offer, t.turker_id) 
+  for t in transactions])
+
+
+if __name__ == "__main__":
+  print """Usage: 
+  # (1) generate the experiment: 
+  # print create_experiment(experiment_name, cond1=val, cond2=val, etc)
+  # (2) pay participants: 
+  # pay_for_experiment(experiment_name)
+  # (3) download and save results:
+  # analyze_experiment(experiment_name) 
+
+  In testmode, you can verify that your thing got pushed here:
+  Requester: https://requestersandbox.mturk.com/mturk/manageHITs
+  Turker: https://workersandbox.mturk.com/mturk/ and search for your task 
+
+  Available experiments:
+  """
+  for idx, experiment in enumerate(db.GqlQuery("Select * FROM Experiment")):
+    print "(%d) %s, (%s)" % (
+      idx + 1,
+      experiment.experiment_name, 
+      "active" if experiment.active else "inactive")
