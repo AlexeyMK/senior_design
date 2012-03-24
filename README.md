@@ -33,6 +33,12 @@ Available Conditions:
 
 Next:
 ----
+- Add turkerID to data rows extracted
+- Save experiment.json
+- refactor experiment.json to be more explicity about each choice (default choices?).
+- change turkers to something like 25 
+
+- start adding more experiments
 
 Later:
 ------
