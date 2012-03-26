@@ -33,12 +33,16 @@ Available Conditions:
 Next:
 ----
 
-- [1hr] Show amount of $$ earned so far
 - analyze/download previous results
  - set up email?
  - run randomly generated condition experiments?
 
 - start adding more experiments
+
+- by 8PM: give jessica json
+- tomorrow morning: look at slides and adjust
+- tomorrow 4:30: sync up in class
+- charts with new conditions
 
 Later:
 ------

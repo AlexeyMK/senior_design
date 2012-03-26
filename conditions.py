@@ -1,3 +1,5 @@
+import random
+from itertools import product
 # set of tools for working with a conditions_json object, like smart defaults
 
 CONDITIONS = {
@@ -25,7 +27,12 @@ CONDITIONS = {
     'values': (True, False),
     'default': False,
     'description': "How much money have you made thus far?",
-  }
+  },
+#  'choice_set': {
+#    'values': ('12345', '123', 'updown'), #TODO - half-stars (1-10)
+#    'default': '12345',
+#    'description': "What kind of voting system are we using?",
+#  }
 }
 
 def generate_conditions(input_conditions):
@@ -42,3 +49,17 @@ def generate_conditions(input_conditions):
     result[key] = value
 
   return result
+
+def random_set_of_conditions():
+  return {key:random.choice(value['values']) 
+    for key, value in CONDITIONS.iteritems()}
+
+def all_possible_conditions():
+  def options_from_conditions(condition, name):
+    return [(name, option) for option in condition['values']]
+
+  named_values = [options_from_conditions(data, name)
+    for name, data in CONDITIONS.iteritems()]
+
+  permutations = [dict(conditions) for conditions in product(*named_values)]
+  return permutations

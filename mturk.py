@@ -16,12 +16,12 @@ import logging
 import pickle
 import csv
 import json
-from conditions import generate_conditions
+from conditions import all_possible_conditions, generate_conditions
 
 logger = logging.getLogger()
 logger.setLevel(logging.INFO)
 TEST_MODE = True
-LOCAL_MODE = True
+LOCAL_MODE = False
 SAFETY_BREAK = True
 HTML_FRAME_HEIGHT = 275 #arbitrary and depends on question HTML itself
 EXTERNAL_Q_URL = "http://localhost:8080/intro" if LOCAL_MODE else \
@@ -30,7 +30,6 @@ HIT_DESCRIPTION = "Play a series of simple games with a fellow turker and receiv
 HIT_TITLE = "Marketplacr experiment"
 HIT_KEYWORDS = ["experiment", "easy",]
 BASE_PRICE_CENTS = 3
-NUM_TASKS = 25
 NUM_ROUNDS_PER_SUBJECT = 5
 
 HIT_CREATE_FAILED = -1
@@ -105,14 +104,14 @@ def reject(assign_id, reason="That was not correct"):
     print "looks like this one was already rejected. or, any other error" 
     return False
 
-def create_hit(experiment_name): 
+def create_hit(experiment_name, num_tasks): 
   quals = Qualifications() # empty
   url = "%s?%s" % (EXTERNAL_Q_URL, urllib.urlencode({
     "experiment_name":experiment_name
   }))
 
   hit_id = post_html_question(HIT_TITLE, HIT_DESCRIPTION, quals, 
-    num_tasks=NUM_TASKS, price_cents=BASE_PRICE_CENTS, q_url=url,
+    num_tasks=num_tasks, price_cents=BASE_PRICE_CENTS, q_url=url,
     keywords=HIT_KEYWORDS)
   if hit_id == HIT_CREATE_FAILED:
     raise BaseException("whoa, could not create that hit...")
@@ -157,19 +156,19 @@ if not LOCAL_MODE:
   # http://code.google.com/appengine/articles/remote_api.html
   remote_api.attach()
 
-def create_experiment(name, **experiment_kwargs):
+def create_experiment(name, num_tasks=10, **experiment_kwargs):
   """ recommended arguments for experiment: 
   
   """
   conditions = generate_conditions(experiment_kwargs)
-  hit_id = "local_mode" if LOCAL_MODE else create_hit(name)
+  hit_id = "local_mode" if LOCAL_MODE else create_hit(name, num_tasks)
   if not hit_id:
     raise BaseException("failed to create HIT, so not making experiment")
 
   experiment = models.Experiment(
     base_price_cents=BASE_PRICE_CENTS,
     num_rounds_per_subject=NUM_ROUNDS_PER_SUBJECT,
-    num_subjects_total=NUM_TASKS,
+    num_subjects_total=num_tasks,
     experiment_name=name,
     hit_id=hit_id,
     conditions_json=json.dumps(conditions),
@@ -267,11 +266,15 @@ def write_results_to_csv(transactions, output_name):
     (t.amount_offered_cents, t.rating_left, t.accepted_offer, t.turker_id) 
   for t in transactions])
 
+def run_every_possible_experiment(prefix, num_tasks_each):
+  for idx, conditions in enumerate(all_possible_conditions()):
+    create_experiment("%s_%d" % (prefix, idx+1), num_tasks_each, **conditions)
+
 
 if __name__ == "__main__":
   print """Usage: 
   # (1) generate the experiment: 
-  # print create_experiment(experiment_name, cond1=val, cond2=val, etc)
+  # print create_experiment(experiment_name, num_tasks=5, cond1=val, cond2=val, etc)
   # (2) pay participants: 
   # pay_for_experiment(experiment_name)
   # (3) download and save results:
