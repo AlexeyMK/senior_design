@@ -30,7 +30,7 @@ HIT_DESCRIPTION = "Play a series of simple games with a fellow turker and receiv
 HIT_TITLE = "Marketplacr experiment"
 HIT_KEYWORDS = ["experiment", "easy",]
 BASE_PRICE_CENTS = 3
-NUM_TASKS = 10
+NUM_TASKS = 25
 NUM_ROUNDS_PER_SUBJECT = 5
 
 HIT_CREATE_FAILED = -1

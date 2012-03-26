@@ -32,18 +32,9 @@ Available Conditions:
 
 Next:
 ----
-- [10m] Text: Motivate leaving a review, personal gain (filtering out bad partners)
-- [10m] Text: Motivate leaving a review, collective gain (cleans system, important)
-- [10m] Text: Motivate leaving a review, base case (experimental validity...)
-- [30m] Force leaving a review to be mandatory 
-
-Test whether the above work
-
+- analyze/download previous results
+ - set up email?
 - [1hr] Show amount of $$ earned so far
-
-- test these
-
-- change turkers to something like 25 
 
 - start adding more experiments
 

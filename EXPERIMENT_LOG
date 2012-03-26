@@ -27,3 +27,9 @@ Cost: ~$5 * 3 = $15
 Conditions: trying three variations (will separate as needed) more than anything to validate that variations work
 
 Results: saved accordingly.  Eyeballing, it doesn't seem like the RMSE differed signficantly across conditions. Everybody is paid
+
+Sunday, Mar 26: running mixed conditions, 25 subjects each.  Tests are called
+- thank_on_bad_review_mandatory_review_experimental_validity_reason_25subjects
+- mandatory_review_personal_gain_25subjects
+
+Going to start mixing things up now that the framework is set up and add more conditions

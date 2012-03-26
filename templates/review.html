@@ -2,6 +2,8 @@
 Rate the exchange (5 for very satisfied, 1 for very unsatisfied)
 </p>
 
+<p> DEBUG: {{ conditions }} </p>
+
 <p>
 {% if conditions.why_leave_a_review == "personal_gain" %} 
 By rating your offerer, you help us avoid pairing you with offerers you did not like in subsequent rounds. 
@@ -13,7 +15,7 @@ By rating your offerer, you help us gather data to understand the results of thi
 </p>
 
 {% if conditions.review_is_mandatory %}
-<p>
+<p id='mandatory_review'>
 Leaving a review is mandatory.
 </p>
 {% endif %}
@@ -21,12 +23,11 @@ Leaving a review is mandatory.
 </pre>
 
 <form name="rating_form" action="finished_round" method="POST">
-  <input type="radio" name="rating" value="1" {% if conditions.review_is_mandatory %} validate="required:true"{% endif %}> 1 </a>
+  <input type="radio" name="rating" value="1"> 1 </a>
   <input type="radio" name="rating" value="2"> 2 </a>
   <input type="radio" name="rating" value="3"> 3 </a>
   <input type="radio" name="rating" value="4"> 4 </a>
   <input type="radio" name="rating" value="5"> 5 </a>
-  <label for="accept" class="error" style="display: none;">Leaving a review is mandatory.</label>
   <input type="submit" value="submit" />
 </form>
 
@@ -38,13 +39,21 @@ Leaving a review is mandatory.
     // avoid doudble-submission
     e.preventDefault();
     var form=this;
-  
+ 
+    var rating = $('input[name=rating]:checked').val();
+    {% if conditions.review_is_mandatory %}
+      if (!rating) {  
+        $('#mandatory_review').hide();
+        setTimeout(function() {$('#mandatory_review').show();}, 500);
+        return false;
+      }
+    {% endif %}
+
     $('#feedback_after_rating').text("Submitting...");
 
     {% if conditions.thank_on_bad_review %}
       // TODO - switch from jinja logic to JS-based conditions object here.
       // grab value of rating...
-      var rating = $('input[name=rating]:checked').val();
       if (rating === "1" || rating === "2") {
         $('#feedback_after_rating').text("Thank you for your review; we will no longer pair you with this person.");
       }
@@ -53,17 +62,4 @@ Leaving a review is mandatory.
     // wait 2 seconds
     setTimeout(function() {form.submit();}, 2000);
   });
-</script>
-
-<script type="text/javascript" src="/js/jquery.js"></script>
-<script type="text/javascript" src="/js/jquery.metadata.js"></script>
-<script type="text/javascript" src="/js/jquery.validate.js"></script>
-
-<script>
-$.metadata.setType("attr", "validate");
-{% if conditions.review_is_mandatory %}
-  $(document).ready(function() {
-    $("#rating").validate();
-  });
-{% endif %}
 </script>
