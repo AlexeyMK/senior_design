@@ -4,6 +4,7 @@ import wsgiref.handlers
 import random
 import sys, os
 import datetime
+import logging
 
 from cherrypy.lib.cptools import redirect
 from jinja2 import Environment, FileSystemLoader
@@ -81,17 +82,13 @@ class MarketplacePage:
   def offer(self):
     ses = cherrypy.session
     if not 'round' in cherrypy.session:
-      ses['round'] = 0
-    ses['round'] += 1 # next round
+      ses['round'] = 1
 
     experiment = ses['experiment']
 
     if ses['round'] > experiment.num_rounds_per_subject:
       # all done, back to mturk now
-      url = "%s/mturk/externalSubmit?%s" % (
-        ses['submit_domain'], urlencode(ses['amazons_args'])
-      )
-      return redirect(url, internal=False)
+      return redirect('finished_experiment', internal=False)
     else:
       #TODO - ask experiment to configure this randomness 
       amount = random.randint(0,10)
@@ -106,14 +103,33 @@ class MarketplacePage:
 
   @cherrypy.expose
   def finished_round(self, rating=None):
-    record_transaction(cherrypy.session, rating) 
-    # lets start another round!
-    return redirect('offer', internal=False)
+    ses = cherrypy.session
+    record_transaction(ses, rating) 
+    ses['round'] += 1
 
+    if ses['round'] > ses['experiment'].num_rounds_per_subject:
+      # all done, back to mturk now
+      return redirect('finished_experiment', internal=False)
+    else:
+    # lets start another round!
+      return redirect('offer', internal=False)
+
+  @cherrypy.expose
+  def finished_experiment(self, rating=None):
+    ses = cherrypy.session
+    if ses['round'] < ses['experiment'].num_rounds_per_subject:
+      return "You're not done yet, what are you doing here?"
+
+    url = "%s/mturk/externalSubmit?%s" % (
+      ses['submit_domain'], urlencode(ses['amazons_args'])
+    )
+    logging.info("telling user %s to go to %s" % (ses['turker_id'], url))
+    return """All done! Click <a href="%s">here</a> to submit.""" % url
 
   @cherrypy.expose
   def bootstrap(self):
     # sketchy way to start an experiment, TODO find better way
+    # this has gross side-effects and is unprotected
     import bootstrap
 
 # app engine specific:

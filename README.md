@@ -32,9 +32,11 @@ Available Conditions:
 
 Next:
 ----
+- figure out problem with previous data
+- [1hr] Show amount of $$ earned so far
 - analyze/download previous results
  - set up email?
-- [1hr] Show amount of $$ earned so far
+ - run randomly generated condition experiments?
 
 - start adding more experiments
 

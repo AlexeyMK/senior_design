@@ -3,7 +3,7 @@ from google.appengine.ext import db
 
 class Experiment(db.Model):
   experiment_name = db.StringProperty()
-  conditions_json = db.StringProperty() 
+  conditions_json = db.StringProperty(default="{}") 
   num_subjects_total = db.IntegerProperty(required=True)
   num_rounds_per_subject = db.IntegerProperty(required=True)
   active = db.BooleanProperty(required=True)

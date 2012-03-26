@@ -237,6 +237,8 @@ def analyze_experiment(experiment_name):
 
   error = analysis.mean_squared_error(analysis_trips)
   print '-'*80 
+  print "Number of transactions: %d" % len(transactions)
+  print "Number of subjects: %d" % len(set(t.turker_id for t in transactions))
   print "Root Mean Squared Error of %s: %f" % (experiment_name, error)
   print '-'*80 
   analysis.plot_linreg(analysis_trips, 
