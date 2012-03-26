@@ -1,13 +1,32 @@
-<pre>
+<p>
 Rate the exchange (5 for very satisfied, 1 for very unsatisfied)
+</p>
+
+<p>
+{% if conditions.why_leave_a_review == "personal_gain" %} 
+By rating your offerer, you help us avoid pairing you with offerers you did not like in subsequent rounds. 
+{% elif conditions.why_leave_a_review == "collective_gain" %} 
+By rating your offerer, you help us filter low-rated offerers out of the marketplace. 
+{% elif conditions.why_leave_a_review == "experimental_validity" %} 
+By rating your offerer, you help us gather data to understand the results of this study. 
+{% endif %}
+</p>
+
+{% if conditions.review_is_mandatory %}
+<p>
+Leaving a review is mandatory.
+</p>
+{% endif %}
+
 </pre>
 
 <form name="rating_form" action="finished_round" method="POST">
-  <input type="radio" name="rating" value="1"> 1 </a>
+  <input type="radio" name="rating" value="1" {% if conditions.review_is_mandatory %} validate="required:true"{% endif %}> 1 </a>
   <input type="radio" name="rating" value="2"> 2 </a>
   <input type="radio" name="rating" value="3"> 3 </a>
   <input type="radio" name="rating" value="4"> 4 </a>
   <input type="radio" name="rating" value="5"> 5 </a>
+  <label for="accept" class="error" style="display: none;">Leaving a review is mandatory.</label>
   <input type="submit" value="submit" />
 </form>
 
@@ -34,4 +53,17 @@ Rate the exchange (5 for very satisfied, 1 for very unsatisfied)
     // wait 2 seconds
     setTimeout(function() {form.submit();}, 2000);
   });
+</script>
+
+<script type="text/javascript" src="/js/jquery.js"></script>
+<script type="text/javascript" src="/js/jquery.metadata.js"></script>
+<script type="text/javascript" src="/js/jquery.validate.js"></script>
+
+<script>
+$.metadata.setType("attr", "validate");
+{% if conditions.review_is_mandatory %}
+  $(document).ready(function() {
+    $("#rating").validate();
+  });
+{% endif %}
 </script>

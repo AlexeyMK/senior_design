@@ -8,14 +8,18 @@ There are two roles: offerer and receiver.
 
 <p>The receiver may choose to accept or reject the offer. If the receiver accepts, both parties will receive their parts as a bonus for the experiment. If the receiver rejects, neither party will receive a bonus for that round.</p>
 
-{% if conditions.review_will_be_anonymous is defined %}
-  <p>
-  {% if conditions.review_will_be_anonymous %}
-    Your reviews will <strong>not be shared</strong> with the other party.
-  {% else %}
+<p>
+{% if conditions.review_will_be_anonymous == "anonymous" %}
+  Your reviews will <strong>not be shared</strong> with the other party.
+{% elif conditions.review_will_be_anonymous == "public" %}
     Your reviews <strong>will be shared</strong> with the other party.
-  {% endif %} 
-  </p>
+{% endif %}
+</p>
+
+{% if conditions.review_is_mandatory %}
+<p>
+Leaving a review is mandatory.
+</p>
 {% endif %}
 
 {% if not in_preview_mode %}
