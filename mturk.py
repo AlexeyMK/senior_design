@@ -194,8 +194,9 @@ def pay_for_experiment(experiment_name):
   pay_for_work([(experiment_name, experiment.hit_id), ])
 
   # if you're paying, this experiment is done
-  experiment.active = False
-  experiment.put()
+  if not SAFETY_BREAK:
+    experiment.active = False
+    experiment.put()
 
 def calculate_bonus_size(experiment_name, worker_id, assignment_hit_id):
   #TODO use hit as well here
