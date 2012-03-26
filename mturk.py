@@ -280,5 +280,8 @@ if __name__ == "__main__":
 
   Available experiments:
   """
-  for idx, experiment in enumerate(db.GqlQuery("Select * FROM Experiment")):
+  experiments = [t for t in db.GqlQuery("Select * FROM Experiment")]
+  for idx, experiment in enumerate(experiments):
     print "(%d) %s" % (idx + 1, experiment)
+
+  print "(available in the variable 'experiments' if you need them directly)" 
