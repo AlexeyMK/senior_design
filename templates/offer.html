@@ -1,5 +1,8 @@
 <pre> 
 Round {{round}} of {{experiment.num_rounds_per_subject}}
+{% if conditions.show_earned_so_far %}
+Amount earned so far: {{earned_so_far_cents}} cents.
+{% endif %}
 You are offered {{amount}} cents.  Do you accept?
 </pre>
 <form action="review" method="POST" id="review_form">

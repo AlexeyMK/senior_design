@@ -35,6 +35,7 @@ def render_for_experiment(page, experiment, **other_args):
   #TODO - headers, and general chrome/css
   other_args['conditions'] = json.loads(experiment.conditions_json)
   other_args['experiment'] = experiment
+  other_args['earned_so_far_cents'] = cherrypy.session['earned_so_far_cents']
   other_args['round'] = cherrypy.session.get('round')
   return env.get_template(page).render(**other_args)
 
@@ -62,6 +63,7 @@ class MarketplacePage:
       del amazons_args['turkSubmitTo']
 
     cherrypy.session['amazons_args'] = amazons_args
+    cherrypy.session['earned_so_far_cents'] = 0
 
     experiment_name = amazons_args.get('experiment_name', None)
     if not experiment_name:
@@ -98,8 +100,12 @@ class MarketplacePage:
       
   @cherrypy.expose
   def review(self, accept):
-    cherrypy.session['accepted'] = (accept == 'true')
-    return render_for_experiment('review.html', cherrypy.session['experiment'])
+    ses = cherrypy.session
+    ses['accepted'] = (accept == 'true')
+    if ses['accepted']:
+      ses['earned_so_far_cents']+= ses['amount']
+
+    return render_for_experiment('review.html', ses['experiment'])
 
   @cherrypy.expose
   def finished_round(self, rating=None):

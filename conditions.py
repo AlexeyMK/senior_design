@@ -21,6 +21,11 @@ CONDITIONS = {
     'default': False,
     'description': "Force users to leave reviews?",
   },
+  'show_earned_so_far': {
+    'values': (True, False),
+    'default': False,
+    'description': "How much money have you made thus far?",
+  }
 }
 
 def generate_conditions(input_conditions):
