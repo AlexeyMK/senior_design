@@ -10,6 +10,12 @@ class Experiment(db.Model):
   hit_id = db.StringProperty(required=True)
   base_price_cents = db.IntegerProperty(required=True)
 
+  def __repr__(self):
+    return "%s (%s)" % (  
+      self.experiment_name, 
+      "active" if self.active else "inactive"
+    )
+
 class MarketTransaction(db.Model):
   turker_id = db.StringProperty(required=True)
   # partner = something like a config for one of the bots
@@ -21,5 +27,16 @@ class MarketTransaction(db.Model):
   transaction_round = db.IntegerProperty(required=True)
   start_time = db.DateTimeProperty(required=True)
   end_time = db.DateTimeProperty(required=True)
+
+  def __repr__(self):
+    return "<%s: %s was offered %d and %s, rating %s (round %d of %s)>" % (
+      self.__class__.__name__,
+      self.turker_id, 
+      self.amount_offered_cents, 
+      "accepted" if self.accepted_offer else "rejected",
+      self.rating_left or 'None',
+      self.transaction_round,
+      self._experiment.id(), # hack to avoid query
+    )
 
 #TODO here - 'partner' - bot descriptions, per experiment...

@@ -20,6 +20,7 @@ def mean_squared_error(tuples):
 
   return err
 
+
 def plot_linreg(tuples, save_fname=None):
   """lin-reg for something like [(2,1), (4,2) (0, 5), ...]"""
   polynomial_degree = 1 

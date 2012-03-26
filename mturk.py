@@ -12,11 +12,11 @@ from boto.s3 import *
 from os.path import *
 
 import urllib
-import sys
 import logging
 import pickle
 import csv
 import json
+from conditions import generate_conditions
 
 logger = logging.getLogger()
 logger.setLevel(logging.INFO)
@@ -161,6 +161,7 @@ def create_experiment(name, **experiment_kwargs):
   """ recommended arguments for experiment: 
   
   """
+  conditions = generate_conditions(experiment_kwargs)
   hit_id = "local_mode" if LOCAL_MODE else create_hit(name)
   if not hit_id:
     raise BaseException("failed to create HIT, so not making experiment")
@@ -171,7 +172,7 @@ def create_experiment(name, **experiment_kwargs):
     num_subjects_total=NUM_TASKS,
     experiment_name=name,
     hit_id=hit_id,
-    conditions_json=json.dumps(experiment_kwargs),
+    conditions_json=json.dumps(conditions),
     active=True,
   )
 
@@ -228,7 +229,7 @@ def analyze_experiment(experiment_name):
   # for now - exclude transations where no rating was left
   transactions = [t for t in transactions if t.rating_left is not None]
   write_results_to_csv(transactions, "results/%s.csv" % experiment_name)
-  write_conditions_to_csv(experiment, "results/%s.json" % experiment_name)
+  write_conditions_to_json(experiment, "results/%s.json" % experiment_name)
   import analysis 
   analysis_trips = [
     (t.amount_offered_cents, int(t.rating_left), t.accepted_offer) 
@@ -241,16 +242,18 @@ def analyze_experiment(experiment_name):
   analysis.plot_linreg(analysis_trips, 
                        save_fname="results/%s.png" % experiment_name)
   
-def gather_experiment_data(experiment_name): 
+def gather_experiment_data(experiment): 
   """produces a list of MarketTransaction objects"""
   experiment_transactions = db.GqlQuery(
     "SELECT * FROM MarketTransaction WHERE experiment = :1", experiment.key()) 
 
   return experiment_transactions 
 
-def write_conditions_to_csv(experiment, output_name):
+def write_conditions_to_json(experiment, output_name):
+  # for legacy's sake, re-generate conditions 
+  conditions = generate_conditions(json.loads(experiment.conditions_json))
   with open(output_name, 'w') as writer:
-    writer.write(experiment.conditions_json)
+    writer.write(json.dumps(conditions))
 
 def write_results_to_csv(transactions, output_name):
   """ takes list of Transaction objects and writes them to csv"""
@@ -278,7 +281,4 @@ if __name__ == "__main__":
   Available experiments:
   """
   for idx, experiment in enumerate(db.GqlQuery("Select * FROM Experiment")):
-    print "(%d) %s, (%s)" % (
-      idx + 1,
-      experiment.experiment_name, 
-      "active" if experiment.active else "inactive")
+    print "(%d) %s" % (idx + 1, experiment)

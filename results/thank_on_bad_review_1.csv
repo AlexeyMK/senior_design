@@ -1,4 +1,4 @@
-Amount offered,Rating Left,"Accepted offer?, Turker ID"
+Amount offered,Rating Left,Accepted offer?,Turker ID
 3,5,True,A1QS475M5OOPGP
 4,1,True,A2BP3SV04BRK95
 10,4,True,A2Z6XDAM3ALJZU
@@ -24,7 +24,6 @@ Amount offered,Rating Left,"Accepted offer?, Turker ID"
 6,3,True,AF809I6N6GIKV
 6,5,True,A197WQ397CSAK0
 3,2,True,A14DAYULFB8RA3
-10,,True,A2BP3SV04BRK95
 5,3,True,A2Z6XDAM3ALJZU
 7,4,True,A232UCDEI33H4H
 3,2,False,A1QS475M5OOPGP

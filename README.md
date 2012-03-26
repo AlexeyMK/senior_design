@@ -33,7 +33,6 @@ Available Conditions:
 
 Next:
 ----
-- refactor experiment.json to be more explicity about each choice (default choices?).
 - change turkers to something like 25 
 
 - start adding more experiments
