@@ -1,29 +1,23 @@
 # rmse.py
 # Calculate error for experiments
+# Test: rmse.py [name of csv file]
 
 # !/usr/bin/python
 
 import math
-import re
 import sys
 
-
-# actual,data,t/f
-csv_pat = re.compile("(\d[\d]?),([\d]?),[a-zA-Z]+")
+import util
 
 
-def process_csv(csv_list):
+def get_single_rmse(actual_val, data_val):
+    return math.fabs(1 + (float)(actual_val) * 2/5 - (float)(data_val))
 
+
+def calculate_rmse(actual, data):
     err_list = []
-    for csv in csv_list:
-        match = re.match(csv_pat, csv)
-        if match: 
-            if len(match.group(2)) == 0:
-                err_list.append() # treat no review same as max err
-            else:
-                err_list.append(math.fabs(1+ (float)(match.group(1)) * 2/5 - (float)(match.group(2))))
-        else:
-            continue
+    for i in range(len(actual)):
+        err_list.append(get_single_rmse(actual[i], data[i]))
 
     avg_err = sum(err_list) / len(err_list)
     
@@ -34,14 +28,8 @@ def process_csv(csv_list):
 
 
 def main(filename):
-
-    file = open(filename)
-    csv_list  = []
-    for line in file.readlines():
-        csv_list.append(line.strip())       
-    file.close()
-
-    print "average error: %f \nstandard error: %f" % (process_csv(csv_list))
+    actual, data = util.process_csv_list(filename)
+    print "average error: %f \nstandard error: %f" % (calculate_rmse(actual, data))
     
 
 if __name__ == '__main__':

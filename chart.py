@@ -19,10 +19,11 @@ import util
 def main(filename):    
     plotname = filename[:filename.find('.')] # remove ".csv"
 
-    x, y = util.process_csv_list(filename)
-    heatmap, xedges, yedges = np.histogram2d(y, x, bins=(4, 10))
+    x, y, ids = util.process_csv_list(filename)
+    heatmap, xedges, yedges = np.histogram2d(x, y, bins=(10, 4))
+    heatmap = heatmap[::-1]
     
-    extent = [yedges[0], yedges[-1], xedges[-1], xedges[0]]
+    extent = [xedges[0], xedges[-1], yedges[0], yedges[-1]]
     plt.imshow(heatmap, extent=extent, interpolation='nearest')
     plt.colorbar()
     plt.savefig(plotname)
