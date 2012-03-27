@@ -13,6 +13,8 @@ Rate the exchange (2 for very satisfied, -2 for very unsatisfied)
 Rate the exchange (3 for satisfied, 1 for unsatisfied)
 {% elif conditions.choice_set == "updown" %}
 Rate the exchange:
+{% elif conditions.choice_set == "relative_to_past" %}
+Which of your past two rounds are you more satisfied with?
 {% endif %}
 </p>
 
@@ -54,6 +56,9 @@ Leaving a review is mandatory.
   {% elif conditions.choice_set == "updown" %}
   <input type="radio" name="rating" value="1"> not satisfied </a>
   <input type="radio" name="rating" value="5"> satisfied </a>
+  {% elif conditions.choice_set == "relative_to_past" %}
+  <input type="radio" name="rating" value="prefer_current"> most recent round </a>
+  <input type="radio" name="rating" value="prefer_last"> previous round </a>
   {% endif %}
   <input type="submit" value="submit" />
 </form>
@@ -81,9 +86,16 @@ Leaving a review is mandatory.
     {% if conditions.thank_on_bad_review %}
       // TODO - switch from jinja logic to JS-based conditions object here.
       // grab value of rating...
-      if (rating === "1" || rating === "2") {
-        $('#feedback_after_rating').text("Thank you for your review; we will no longer pair you with this person.");
-      }
+      // this mixed logic is gross...
+      {% if conditions.choice_set == "relative_to_past" %}
+        if (rating) {
+          $('#feedback_after_rating').text("Thank you for your review; we will try to pair you more often with your choice");
+        }
+      {% else %}
+        if (rating === "1" || rating === "2") {
+          $('#feedback_after_rating').text("Thank you for your review; we will no longer pair you with this person.");
+        }
+      {% endif %}
     {% endif %}
 
     // wait 2 seconds

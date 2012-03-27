@@ -33,6 +33,7 @@ Available Conditions:
 Next:
 ----
 - [1hr] Rank past interactions instead of asking individually (rank "this vs last")
+- Test relative amount (normal and old still work)
 
 
  - set up email?

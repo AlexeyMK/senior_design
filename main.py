@@ -19,9 +19,9 @@ from models import *
 sys.modules['memcache'] = memcache
 env = Environment(loader=FileSystemLoader('templates'))
 
-def record_transaction(session, rating=None):
+def record_transaction(session, rating=None, amount=None):
   trans = MarketTransaction(turker_id = session['turker_id'],
-                   amount_offered_cents = session['amount'],
+                   amount_offered_cents = amount or session['amount'],
                    accepted_offer = session['accepted'],
                    rating_left = rating,
                    transaction_round = session['round'],
@@ -96,6 +96,7 @@ class MarketplacePage:
     else:
       #TODO - ask experiment to configure this randomness 
       amount = random.randint(0,10)
+      ses['last_amount'] = ses.get('amount')
       ses['amount'] = amount
       ses['start_time'] = datetime.datetime.now()
       return render_for_experiment('offer.html', experiment, amount=amount)
@@ -107,12 +108,27 @@ class MarketplacePage:
     if ses['accepted']:
       ses['earned_so_far_cents']+= ses['amount']
 
-    return render_for_experiment('review.html', ses['experiment'])
+    # if no need for review, just keep going
+    if condition_get('choice_set') == 'relative_to_past' and ses['round'] == 1:
+      # can't compare relative to past on round 1 (no past)
+      return redirect('finished_round', internal=True)
+    else:
+      return render_for_experiment('review.html', ses['experiment'])
 
   @cherrypy.expose
   def finished_round(self, rating=None):
     ses = cherrypy.session
-    record_transaction(ses, rating) 
+    if condition_get('choice_set') == 'relative_to_past' and ses['round'] > 1:
+      # save relative ratings
+      if rating == 'prefer_current':
+        record_transaction(ses, "5", amount=ses['amount']) 
+        record_transaction(ses, "1", amount=ses['last_amount']) 
+      elif rating == 'prefer_last':
+        record_transaction(ses, "1", amount=ses['amount']) 
+        record_transaction(ses, "5", amount=ses['last_amount']) 
+    else:
+      record_transaction(ses, rating) 
+
     ses['round'] += 1
 
     if ses['round'] > ses['experiment'].num_rounds_per_subject:
@@ -139,6 +155,11 @@ class MarketplacePage:
     # sketchy way to start an experiment, TODO find better way
     # this has gross side-effects and is unprotected
     import bootstrap
+
+def condition_get(condition_name):
+  conditions = generate_conditions(
+    json.loads(cherrypy.session['experiment'].conditions_json))
+  return conditions.get(condition_name)
 
 # app engine specific:
 # hack to make sessions work
