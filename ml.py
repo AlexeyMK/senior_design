@@ -20,26 +20,27 @@ def make_arrays(dirname):
    
     filenames = os.listdir(dirname)
     for filename in filenames:
-        if ".json" in filename:
-            conditions = util.process_json(os.path.join(dirname, filename))
-    
-            x, y, idx = util.process_csv_list(os.path.join(dirname, filename[:-5] + ".csv"))
-            new_x, new_y, removed = mahalanobis.remove_outliers(x, y) 
-            for i in range(len(new_x)):
-                tempd, tempp = [0] * (util.num_conditions + 1), [0] * (util.num_conditions + 1)
-                for j in conditions:
-                    tempd[j] = 1
-                    tempp[j] = -1
-                data.append(tempd)
-                predictions.append(tempp)
+        if not ".json" in filename:
+            continue
 
-                error = rmse.get_single_rmse(new_x[i], new_y[i])
-                if error <= util.base_error / 2:
-                    boost_labels.append(1)
-                    maxent_labels.append(1)
-                else:
-                    boost_labels.append(-1)
-                    maxent_labels.append(0)
+        conditions = util.process_json(os.path.join(dirname, filename))
+    
+        x, y, idx = util.process_csv_list(os.path.join(dirname, filename[:-5] + ".csv"))
+        for i in range(len(x)):
+            tempd, tempp = [0] * (util.num_conditions + 1), [0] * (util.num_conditions + 1)
+            for j in conditions:
+                tempd[j] = 1
+                tempp[j] = -1
+            data.append(tempd)
+            predictions.append(tempp)
+
+            error = rmse.get_single_rmse(x[i], y[i])
+            if error <= util.base_error / 2:
+                boost_labels.append(1)
+                maxent_labels.append(1)
+            else:
+                boost_labels.append(-1)
+                maxent_labels.append(0)
 
     data = np.array(data)
     predictions = np.array(predictions)
@@ -53,9 +54,6 @@ def main(dirname):
 
     boost_features = adaboost.boost(predictions, boost_labels)
     maxent_features = entropy.choose_features(data, maxent_labels)
-
-    print boost_features
-    print maxent_features
 
     condition_dict = dict((v, k) for k, v in util.conditions.iteritems())
     features = [condition_dict[x] for x in boost_features if x in maxent_features]
