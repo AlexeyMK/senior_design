@@ -5,7 +5,15 @@ Amount earned so far: {{earned_so_far_cents}} cents.
 {% endif %}
 
 <p>
+{% if conditions.choice_set == "1..5" %}
 Rate the exchange (5 for very satisfied, 1 for very unsatisfied)
+{% elif conditions.choice_set == "-2..2" %}
+Rate the exchange (2 for very satisfied, -2 for very unsatisfied)
+{% elif conditions.choice_set == "123" %}
+Rate the exchange (3 for satisfied, 1 for unsatisfied)
+{% elif conditions.choice_set == "updown" %}
+Rate the exchange:
+{% endif %}
 </p>
 
 <p>
@@ -27,11 +35,26 @@ Leaving a review is mandatory.
 </pre>
 
 <form name="rating_form" action="finished_round" method="POST">
+  {% if conditions.choice_set == "1..5" %}
   <input type="radio" name="rating" value="1"> 1 </a>
   <input type="radio" name="rating" value="2"> 2 </a>
   <input type="radio" name="rating" value="3"> 3 </a>
   <input type="radio" name="rating" value="4"> 4 </a>
   <input type="radio" name="rating" value="5"> 5 </a>
+  {% elif conditions.choice_set == "-2..2" %}
+  <input type="radio" name="rating" value="1"> -2</a>
+  <input type="radio" name="rating" value="2"> -1</a>
+  <input type="radio" name="rating" value="3"> 0 </a>
+  <input type="radio" name="rating" value="4"> 1 </a>
+  <input type="radio" name="rating" value="5"> 2 </a>
+  {% elif conditions.choice_set == "123" %}
+  <input type="radio" name="rating" value="1"> 1 </a>
+  <input type="radio" name="rating" value="3"> 2 </a>
+  <input type="radio" name="rating" value="5"> 3 </a>
+  {% elif conditions.choice_set == "updown" %}
+  <input type="radio" name="rating" value="1"> not satisfied </a>
+  <input type="radio" name="rating" value="5"> satisfied </a>
+  {% endif %}
   <input type="submit" value="submit" />
 </form>
 

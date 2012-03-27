@@ -28,11 +28,11 @@ CONDITIONS = {
     'default': False,
     'description': "How much money have you made thus far?",
   },
-#  'choice_set': {
-#    'values': ('12345', '123', 'updown'), #TODO - half-stars (1-10)
-#    'default': '12345',
-#    'description': "What kind of voting system are we using?",
-#  }
+  'choice_set': {
+    'values': ('-2..2','1..5', '123', 'updown'), #TODO - half-stars (1-10)
+    'default': '1..5',
+    'description': "What kind of voting system are we using? (Also, how are we framing it?",
+  }
 }
 
 def generate_conditions(input_conditions):

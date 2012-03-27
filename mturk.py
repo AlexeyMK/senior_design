@@ -12,6 +12,7 @@ from boto.s3 import *
 from os.path import *
 
 import urllib
+import time
 import logging
 import pickle
 import csv
@@ -177,6 +178,10 @@ def create_experiment(name, num_tasks=10, **experiment_kwargs):
 
   print "Experiment %s created." % experiment.experiment_name
   experiment.put()
+  if TEST_MODE:
+    print "Test at %s?experiment_name=%s&assignmentId=BS1&hitId=BS2&workerId=BS3%d&&turkSubmitTo=https://workersandbox.mturk.com" % (
+      EXTERNAL_Q_URL, experiment.experiment_name, int(time.time()))
+
   return experiment
 
 def pay_for_experiment(experiment_name):
