@@ -9,8 +9,8 @@ from pylab import plot, title, show, legend, xlabel, ylabel, savefig
 def mean_squared_error(tuples):
   """Uses lin-reg for something like [(2,1), (4,2) (0, 5), ...]"""
   polynomial_degree = 1 
-  xs = [tup[0] for tup in tuples]
-  ys = [tup[1] for tup in tuples]
+  xs = [int(tup[0]) for tup in tuples]
+  ys = [int(tup[1]) for tup in tuples]
   mx, b = polyfit(xs, ys, polynomial_degree)
 
   # mean square error (smaller is better)
