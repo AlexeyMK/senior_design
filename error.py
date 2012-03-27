@@ -19,11 +19,12 @@ def main(dirname):
             continue
 
         filename = filename[:-5] + ".csv"
-        print "processing %s" % filename
+        print "Processing %s... " % filename[:-4],
         x, y, ids = util.process_csv_list(os.path.join(dirname, filename))
         new_x, new_y, removed = mahalanobis.remove_outliers(x, y) 
-        print "removed %d outlying point(s)" % (len(x) - len(new_x))
-        print "average error: %f \nstandard error: %f" % (rmse.calculate_rmse(new_x, new_y))
+        print "done"
+        print "Removed %d outlying point(s)" % (len(x) - len(new_x))
+        print "Average error: %f, standard error: %f" % (rmse.calculate_rmse(new_x, new_y))
         print
     
 

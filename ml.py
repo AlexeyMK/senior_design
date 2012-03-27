@@ -23,6 +23,7 @@ def make_arrays(dirname):
         if not ".json" in filename:
             continue
 
+        print "Collecting data from %s... " % filename[:-5],
         conditions = util.process_json(os.path.join(dirname, filename))
     
         x, y, idx = util.process_csv_list(os.path.join(dirname, filename[:-5] + ".csv"))
@@ -42,6 +43,9 @@ def make_arrays(dirname):
                 boost_labels.append(-1)
                 maxent_labels.append(0)
 
+        print "done"
+        print
+
     data = np.array(data)
     predictions = np.array(predictions)
     boost_labels = np.array(boost_labels)
@@ -52,8 +56,13 @@ def make_arrays(dirname):
 def main(dirname):
     data, predictions, boost_labels, maxent_labels = make_arrays(dirname)
 
+    print "Boosting... ",
     boost_features = adaboost.boost(predictions, boost_labels)
+    print "done"
+    print "Calculating information gain... ",
     maxent_features = entropy.choose_features(data, maxent_labels)
+    print "done"
+    print
 
     condition_dict = dict((v, k) for k, v in util.conditions.iteritems())
     features = [condition_dict[x] for x in boost_features if x in maxent_features]

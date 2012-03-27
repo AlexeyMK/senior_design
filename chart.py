@@ -17,7 +17,7 @@ import util
 
 
 def main(filename):    
-    plotname = filename[:filename.find('.')] # remove ".csv"
+    plotname = filename[:-4] # remove ".csv"
 
     x, y, ids = util.process_csv_list(filename)
     heatmap, xedges, yedges = np.histogram2d(x, y, bins=(10, 4))
@@ -27,6 +27,8 @@ def main(filename):
     plt.imshow(heatmap, extent=extent, interpolation='nearest')
     plt.colorbar()
     plt.savefig(plotname)
+
+    print "Generated heatmap image %s.png" % plotname
 
 
 if __name__ == '__main__':
