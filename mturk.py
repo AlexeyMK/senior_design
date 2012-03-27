@@ -233,12 +233,15 @@ def analyze_experiment(experiment_name):
   transactions = gather_experiment_data(experiment)
   # for now - exclude transations where no rating was left
   transactions = [t for t in transactions if t.rating_left is not None]
+  if not transactions:
+    print "No results available, so not analyzing %s" % experiment_name 
+    return 
   write_results_to_csv(transactions, "results/%s.csv" % experiment_name)
   write_conditions_to_json(experiment, "results/%s.json" % experiment_name)
   import analysis 
   analysis_trips = [
     (t.amount_offered_cents, int(t.rating_left), t.accepted_offer) 
-  for t in transactions]
+  for t in transactions if t.rating_left]
 
   error = analysis.mean_squared_error(analysis_trips)
   print '-'*80 

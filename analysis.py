@@ -21,7 +21,7 @@ def mean_squared_error(tuples):
   return err
 
 
-def plot_linreg(tuples, save_fname=None):
+def plot_linreg(tuples, save_fname=None, do_show=False):
   """lin-reg for something like [(2,1), (4,2) (0, 5), ...]"""
   polynomial_degree = 1 
   xs = [tup[0] for tup in tuples]
@@ -39,5 +39,6 @@ def plot_linreg(tuples, save_fname=None):
   ylabel('Rating given (1-5 stars)')
   if save_fname:
      savefig(save_fname, format="png") 
-  show()
+  if do_show:
+    show()
 
