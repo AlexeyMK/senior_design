@@ -34,11 +34,16 @@ def boost(predictions, labels, T=0):
     D = np.ones(n)
     D = D / D.sum()
 
+    used = []
     for t in range(T):
         
         # choose the best feature
         for i in range(m):
-            temp[i] = (D * (errors[:,i] < 0)).sum()
+            if i in used:
+                temp[i] = np.inf # disallow features to be chosen twice
+            else:
+                temp[i] = (D * (errors[:,i] < 0)).sum()
+        used.append(temp.argmin())
         err, features[t] = temp.min(), temp.argmin()
 
         # update alpha and D
