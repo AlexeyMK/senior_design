@@ -35,3 +35,5 @@ Sunday, Mar 26: running mixed conditions, 25 subjects each.  Tests are called
 Going to start mixing things up now that the framework is set up and add more conditions.
 
 Results: saved, looks like one of them had slightly lower error, but waiting for Jessica to get the measurement system set up. Had what I thought was an error as a result of two turkers' reports, but that doesn't look accurate anymore (double-checked, their stuff got submitted)
+
+Monday, Mar 26: Started two new experiment sets in which we run hundreds of experiments but with only one subject each.  This (hopefully) lets us tease out specific condition attributes. Also trying new conditions for alternate rating systems (-2..2, this vs previous, upvote vs downvote, etc) as opposed to the traditional 1..5.

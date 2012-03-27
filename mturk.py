@@ -17,7 +17,7 @@ import logging
 import pickle
 import csv
 import json
-from conditions import all_possible_conditions, generate_conditions
+from conditions import *
 
 logger = logging.getLogger()
 logger.setLevel(logging.INFO)
@@ -275,6 +275,14 @@ def run_every_possible_experiment(prefix, num_tasks_each):
   for idx, conditions in enumerate(all_possible_conditions()):
     create_experiment("%s_%d" % (prefix, idx+1), num_tasks_each, **conditions)
 
+def create_experiment_set(prefix, condition_to_vary, num_tasks_total):
+  from itertools import cycle
+  next_value_gen = cycle(CONDITIONS[condition_to_vary]['values'])
+  for idx in range(num_tasks_total):
+    conditions = random_set_of_conditions()
+    # set the condition we want going in a circle
+    conditions[condition_to_vary] = next_value_gen.next()
+    create_experiment("%s_%d" % (prefix, idx+1), 1, **conditions)
 
 if __name__ == "__main__":
   print """Usage: 
