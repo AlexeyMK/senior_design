@@ -29,7 +29,7 @@ CONDITIONS = {
     'description': "How much money have you made thus far?",
   },
   'choice_set': {
-    'values': ('-2..2','1..5', '123', 'updown'), #TODO - half-stars (1-10)
+    'values': ('-2..2','1..5', '123', 'updown', 'relative_to_past'), #TODO - half-stars (1-10)
     'default': '1..5',
     'description': "What kind of voting system are we using? (Also, how are we framing it?",
   }

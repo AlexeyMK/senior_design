@@ -12,6 +12,7 @@ from google.appengine.api import memcache
 from google import appengine
 from urllib import urlencode
 
+from conditions import generate_conditions
 from models import *
 
 # patch sys memcache module locations to use GAE memcache
@@ -33,7 +34,8 @@ def record_transaction(session, rating=None):
 
 def render_for_experiment(page, experiment, **other_args):
   #TODO - headers, and general chrome/css
-  other_args['conditions'] = json.loads(experiment.conditions_json)
+  other_args['conditions'] = generate_conditions(
+    json.loads(experiment.conditions_json))
   other_args['experiment'] = experiment
   other_args['earned_so_far_cents'] = cherrypy.session['earned_so_far_cents']
   other_args['round'] = cherrypy.session.get('round')

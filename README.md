@@ -32,14 +32,10 @@ Available Conditions:
 
 Next:
 ----
+- [1hr] Rank past interactions instead of asking individually (rank "this vs last")
 
-- analyze/download previous results
+
  - set up email?
- - run randomly generated condition experiments?
-
-- start adding more experiments
-
-- by 8PM: give jessica json
 - tomorrow morning: look at slides and adjust
 - tomorrow 4:30: sync up in class
 - charts with new conditions
@@ -51,15 +47,11 @@ Later:
     - [10m] Show past rating in diffent scale (say out of 10, or ranking) 
     - [1hr] Emphasize polarized past reviews
 - [4hr] Add more personality to the other side (name profile, etc)
-- [1hr] Rank past interactions instead of asking individually (rank "this vs last")
 - [5hr] Rank past interactions instead of asking individually (rank "interactions this session")
 - [4hr] Pay for accurate reviews (immediately when left)
   - [2hr] Pay for accurate reviews (at the end, and let them know before)
 - [3hr[ Animation when review is left (happy face/sad face, trash can, etc)
-- [30m] Fewer choices: Thumbs up/down
-  - [5m] Fewer choices: 1/2/3 
-  - [5m] More choices: 1-->10
-  - [5m] Different framing (-2...2)
+- [30m] More choices: 1-->10
 - [2hr] Rate on speed AND fairness rather than 'in general'
 - [5hr] Ask for all feedback afterwards (end of session)
 - [2hr] Ask for all feedback afterwards (contact via mturk)
