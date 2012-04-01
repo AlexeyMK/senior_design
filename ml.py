@@ -66,6 +66,7 @@ def main(dirname):
 
     condition_dict = dict((v, k) for k, v in util.conditions.iteritems())
     features = [condition_dict[x] for x in boost_features if x in maxent_features]
+    import pdb; pdb.set_trace() 
     print "Most predictive feature(s):"
     for feature in features:
         print feature

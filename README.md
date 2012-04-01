@@ -32,25 +32,30 @@ Available Conditions:
 
 Next:
 ----
- - set up email?
-- tomorrow morning: look at slides and adjust
-- tomorrow 4:30: sync up in class
-- charts with new conditions
+- [30m] wait for other delay
+- [1hr] Pay for accurate reviews (immediately when left) define 'accurate' - by buckets, 1c bonuses. Let them know immediately.
 
 Later:
 ------
+- [30m] More choices: 1-->10 TODO: ask jessica
+- [2hr] Animation when review is left (happy face/sad face, trash can, etc)
+- [2hr] Ask for all feedback afterwards (end of session) (include quality reminder)
 - [2hr] Show (vs don't show) past ratings
-    - [10m] Show past rating in diffent scale (say out of 10, or ranking) 
-    - [1hr] Emphasize polarized past reviews
-- [4hr] Add more personality to the other side (name profile, etc)
-- [5hr] Rank past interactions instead of asking individually (rank "interactions this session")
-- [4hr] Pay for accurate reviews (immediately when left)
-- [2hr] Pay for accurate reviews (at the end, and let them know before)
-- [3hr[ Animation when review is left (happy face/sad face, trash can, etc)
-- [30m] More choices: 1-->10
+    - show 'correct' ratings instead
+    - show 'true' ratings from all past experiments (calculate first)
+
+Probably Wont Happen:
+---------------------
 - [2hr] Rate on speed AND fairness rather than 'in general'
-- [5hr] Ask for all feedback afterwards (end of session)
+- [2hr] Pay for accurate reviews (at the end, and let them know before)
+- [1hr] (show past reviews) Emphasize polarized past reviews
+- [5hr] Rank past interactions instead of asking individually (rank "interactions this session")
+- [4hr] Add more personality to the other side (name profile, etc)
 - [2hr] Ask for all feedback afterwards (contact via mturk)
+
+
+
+
 
 TODOS:
 -----

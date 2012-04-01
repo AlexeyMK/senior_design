@@ -110,22 +110,26 @@ class MarketplacePage:
 
     # if no need for review, just keep going
     if condition_get('choice_set') == 'relative_to_past' and ses['round'] == 1:
+      return self.finished_round()
       # can't compare relative to past on round 1 (no past)
-      return redirect('finished_round', internal=True)
+      # BUG; having a redirect here restarts the things we added to the session.
+      # very weird.
+      ## return redirect('finished_round', internal=True)
     else:
       return render_for_experiment('review.html', ses['experiment'])
 
   @cherrypy.expose
   def finished_round(self, rating=None):
     ses = cherrypy.session
-    if condition_get('choice_set') == 'relative_to_past' and ses['round'] > 1:
-      # save relative ratings
-      if rating == 'prefer_current':
-        record_transaction(ses, "5", amount=ses['amount']) 
-        record_transaction(ses, "1", amount=ses['last_amount']) 
-      elif rating == 'prefer_last':
-        record_transaction(ses, "1", amount=ses['amount']) 
-        record_transaction(ses, "5", amount=ses['last_amount']) 
+    if condition_get('choice_set') == 'relative_to_past': 
+      if ses['round'] > 1:
+        # save relative ratings
+        if rating == 'prefer_current':
+          record_transaction(ses, "5", amount=ses['amount']) 
+          record_transaction(ses, "1", amount=ses['last_amount']) 
+        elif rating == 'prefer_last':
+          record_transaction(ses, "1", amount=ses['amount']) 
+          record_transaction(ses, "5", amount=ses['last_amount']) 
     else:
       record_transaction(ses, rating) 
 
