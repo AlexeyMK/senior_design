@@ -21,7 +21,7 @@ from conditions import *
 
 logger = logging.getLogger()
 logger.setLevel(logging.INFO)
-TEST_MODE = True
+TEST_MODE = False
 LOCAL_MODE = False
 SAFETY_BREAK = True
 HTML_FRAME_HEIGHT = 275 #arbitrary and depends on question HTML itself
@@ -225,11 +225,21 @@ def calculate_bonus_size(experiment_name, worker_id, assignment_hit_id):
 
   return bonus_cents 
 
-def analyze_experiment(experiment_name):
-  experiment = db.GqlQuery("SELECT * FROM Experiment WHERE experiment_name = :1", 
-    experiment_name).get()
-  if not experiment:
-    raise Exception("Could not find experiment named %s" % experiment_name)
+
+def analyze_experiments(experiments):
+  for experiment in experiments:
+    analyze_experiment(experiment=experiment)
+
+
+def analyze_experiment(experiment_name=None, experiment=None):
+  # work with either input
+  if experiment is None:
+    experiment = db.GqlQuery("SELECT * FROM Experiment WHERE experiment_name = :1", 
+      experiment_name).get()
+    if not experiment:
+      raise Exception("Could not find experiment named %s" % experiment_name)
+  else:
+    experiment_name = experiment.experiment_name
   transactions = gather_experiment_data(experiment)
   # for now - exclude transations where no rating was left
   transactions = [t for t in transactions if t.rating_left is not None]
