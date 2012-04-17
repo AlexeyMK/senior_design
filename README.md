@@ -32,17 +32,16 @@ Available Conditions:
 
 Next:
 ----
-- [30m] wait for other delay
-- [1hr] Pay for accurate reviews (immediately when left) define 'accurate' - by buckets, 1c bonuses. Let them know immediately.
+- [2hr] Animation when review is left (happy face/sad face, trash can, etc)
 
 Later:
 ------
 - [30m] More choices: 1-->10 TODO: ask jessica
-- [2hr] Animation when review is left (happy face/sad face, trash can, etc)
 - [2hr] Ask for all feedback afterwards (end of session) (include quality reminder)
 - [2hr] Show (vs don't show) past ratings
     - show 'correct' ratings instead
     - show 'true' ratings from all past experiments (calculate first)
+- [1hr] Pay for accurate reviews (immediately when left) define 'accurate' - by buckets, 1c bonuses. Let them know immediately.
 
 Probably Wont Happen:
 ---------------------

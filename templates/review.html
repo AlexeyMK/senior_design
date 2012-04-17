@@ -64,6 +64,8 @@ Leaving a review is mandatory.
 </form>
 
 <p id="feedback_after_rating"></p>
+<img src="/js/Thumbs-up.jpg" id="thumbs-up" style="display:none;"></img>
+<img src="/js/trash-bin-jump-fail.gif" id="thumbs-down" style="display:none;"></img>
 
 <script type="text/javascript" src="/js/jquery.js"></script>
 <script>
@@ -83,6 +85,14 @@ Leaving a review is mandatory.
 
     $('#feedback_after_rating').text("Submitting...");
 
+    {% if conditions.comical_response_to_reviews %}
+       if (rating === "1" || rating === "2") {
+          $('#thumbs-down').show();
+       } else if (rating === "4" || rating === "5") {
+          $('#thumbs-up').show();
+       }
+    {% endif %}
+
     {% if conditions.thank_on_bad_review %}
       // TODO - switch from jinja logic to JS-based conditions object here.
       // grab value of rating...
@@ -99,6 +109,6 @@ Leaving a review is mandatory.
     {% endif %}
 
     // wait 2 seconds
-    setTimeout(function() {form.submit();}, 2000);
+    setTimeout(function() {form.submit();}, 2500);
   });
 </script>

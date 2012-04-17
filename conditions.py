@@ -38,6 +38,11 @@ CONDITIONS = {
     'default': False,
     'description': "Do we pretend there's another side making a decision? Take a random time-out and wait every turn before an offer.",
   },
+  'comical_response_to_reviews': {
+    'values': (True, False),
+    'default': False,
+    'description': "Do we show funny gifs after positive/negative reviews? A question of adding character to the system."
+  },
 }
 
 def generate_conditions(input_conditions):
