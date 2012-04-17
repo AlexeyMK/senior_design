@@ -11,16 +11,16 @@ Amount earned so far: {{earned_so_far_cents}} cents.
     <pre>
     You are offered {{amount}} cents.  Do you accept?
     </pre>
+    <form action="review" method="POST" id="review_form">
+    <fieldset>
+      <input type="radio" name="accept" value="true" validate="required:true" /> Accept
+      <input type="radio" name="accept" value="false" /> Reject 
+      <br />
+      <label for="accept" class="error" style="display: none;">Do you accept or reject the offer?</label>
+    </fieldset>
+    <input type="submit" value="submit" />
+    </form>
 </div>
-<form action="review" method="POST" id="review_form">
-<fieldset>
-  <input type="radio" name="accept" value="true" validate="required:true" /> Accept
-  <input type="radio" name="accept" value="false" /> Reject 
-  <br />
-  <label for="accept" class="error" style="display: none;">Do you accept or reject the offer?</label>
-</fieldset>
-<input type="submit" value="submit" />
-</form>
 
 <script type="text/javascript" src="/js/jquery.js"></script>
 <script type="text/javascript" src="/js/jquery.metadata.js"></script>
