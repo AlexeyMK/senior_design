@@ -32,7 +32,12 @@ CONDITIONS = {
     'values': ('-2..2','1..5', '123', 'updown', 'relative_to_past'), #TODO - half-stars (1-10)
     'default': '1..5',
     'description': "What kind of voting system are we using? (Also, how are we framing it?",
-  }
+  },
+  'wait_for_partner': {
+    'values': (True, False),
+    'default': False,
+    'description': "Do we pretend there's another side making a decision? Take a random time-out and wait every turn before an offer.",
+  },
 }
 
 def generate_conditions(input_conditions):

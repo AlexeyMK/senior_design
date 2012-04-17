@@ -3,8 +3,15 @@ Round {{round}} of {{experiment.num_rounds_per_subject}}
 {% if conditions.show_earned_so_far %}
 Amount earned so far: {{earned_so_far_cents}} cents.
 {% endif %}
-You are offered {{amount}} cents.  Do you accept?
 </pre>
+<div id="waiting_for_partner">
+    Waiting for proposer to make an offer...
+</div>
+<div id="offer_div" style="display: none;">
+    <pre>
+    You are offered {{amount}} cents.  Do you accept?
+    </pre>
+</div>
 <form action="review" method="POST" id="review_form">
 <fieldset>
   <input type="radio" name="accept" value="true" validate="required:true" /> Accept
@@ -23,5 +30,19 @@ You are offered {{amount}} cents.  Do you accept?
 $.metadata.setType("attr", "validate");
 $(document).ready(function() {
   $("#review_form").validate();
+
+  var partner_wait_ms = 0; 
+  {% if conditions.wait_for_partner %}
+    // Returns a random integer between min and max
+    function getRandomInt(min, max) {
+      return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
+    partner_wait_ms = getRandomInt(1000, 5000);
+  {% endif %}
+
+  setTimeout(function() {
+    $("#offer_div").show()
+    $("#waiting_for_partner").hide()
+  }, partner_wait_ms);
 });
 </script>
