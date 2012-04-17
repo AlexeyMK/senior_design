@@ -32,7 +32,6 @@ Available Conditions:
 
 Next:
 ----
-- [2hr] Animation when review is left (happy face/sad face, trash can, etc)
 
 Later:
 ------
